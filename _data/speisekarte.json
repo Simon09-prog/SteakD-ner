@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Classic Steak Döner",
+    "price": "8,50 €",
+    "description": "Im frisch gebackenen Fladenbrot mit knackigem Salat, Tomaten, Gurken, Zwiebeln und Sauce nach Wahl."
+  },
+  {
+    "title": "Steak Döner Dürüm",
+    "price": "9,50 €",
+    "description": "Eingerollt in frischem Yufka-Teig, prall gefüllt mit feinstem Steakfleisch, Salat und Saucen."
+  },
+  {
+    "title": "Premium Steak Teller",
+    "price": "14,90 €",
+    "description": "Große Portion Steakfleisch, serviert mit Pommes frites oder Reis, Beilagensalat und Saucen."
+  },
+  {
+    "title": "Veggie Döner (Grillgemüse)",
+    "price": "6,50 €",
+    "description": "Für unsere vegetarischen Freunde: Frisches Brot, gegrilltes Gemüse, Weichkäse und Spezial-Sauce."
+  }
+]
