@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steak Döner Osnabrück | Premium Döner</title>
+    <style>
+        /* Grundlegendes Styling */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background-color: #1a1a1a;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        nav {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            color: #f8b400;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #f8b400;
+        }
+
+        /* Hero Bereich mit Video-Hintergrund */
+        .hero {
+            position: relative;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+        /* Das Video im Hintergrund */
+        .hero video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+        /* Dunkler Filter über dem Video für bessere Lesbarkeit */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        .hero-content {
+            z-index: 1;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            margin: 0 0 10px 0;
+            color: #f8b400;
+            text-transform: uppercase;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        .btn {
+            background-color: #f8b400;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #ffc107;
+            transform: scale(1.05);
+        }
+
+        /* Container für Inhalte */
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+        }
+        .about {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+        }
+
+        /* Footer & Kontakt */
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: auto;
+            text-align: left;
+        }
+        .footer-content h4 {
+            color: #f8b400;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 200px;
+            border: 0;
+            border-radius: 8px;
+        }
+        .footer-bottom {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Steak Döner</a>
+            <div class="nav-links">
+                <a href="#about">Über uns</a>
+                <a href="menu.html">Speisekarte</a>
+                <a href="#contact">Kontakt</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Sektion mit Video -->
+    <section class="hero">
+        <video autoplay muted loop playsinline>
+            <!-- Hier wurde der Dateiname deines Videos eingefügt -->
+            <source src="v24044gl0000d25jalnog65g8laa1il0.mov" type="video/quicktime">
+            Dein Browser unterstützt keine Videos.
+        </video>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <h1>Der beste Steak Döner</h1>
+            <p>100% Premium Rindfleisch. Täglich frisch. Mitten in Osnabrück.</p>
+            <a href="menu.html" class="btn">Zur Speisekarte</a>
+        </div>
+    </section>
+
+    <!-- Über Uns Sektion -->
+    <div class="container" id="about">
+        <h2>Echte Qualität schmeckt man</h2>
+        <div class="about">
+            <p>Vergiss den Standard. Bei uns gibt es kein Hackfleisch, sondern puren Genuss. Unser Fleisch besteht zu 100% aus hochwertigem Steakfleisch, das täglich frisch auf den Spieß gesteckt wird. Kombiniert mit knackigem, regionalem Gemüse aus dem Osnabrücker Land und unseren geheimen Saucen-Rezepten, bieten wir dir ein unvergleichliches Geschmackserlebnis.</p>
+        </div>
+    </div>
+
+    <!-- Footer & Kontakt (Mit Map) -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div>
+                <h4>Besuch uns</h4>
+                <p>Bremer Str. 56<br>49084 Osnabrück<br>Deutschland</p>
+                <p>Telefon: 0541 / 123 456 78</p>
+            </div>
+            <div>
+                <h4>Öffnungszeiten</h4>
+                <p>Mo - Do: 11:00 - 22:00 Uhr<br>
+                Fr - Sa: 11:00 - 00:00 Uhr<br>
+                So: 12:00 - 21:00 Uhr</p>
+            </div>
+            <div class="map-container">
+                <h4>Anfahrt</h4>
+                <!-- Google Maps iFrame -->
+                <iframe src="https://maps.google.com/maps?q=Bremer%20Str.%2056,%20Osnabr%C3%BCck&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Steak Döner Osnabrück. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
