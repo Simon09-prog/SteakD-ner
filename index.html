@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steak Döner Osnabrück | Premium Döner</title>
+    <style>
+        /* Grundlegendes Styling */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background-color: #1a1a1a;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        nav {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            color: #f8b400;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #f8b400;
+        }
+
+        /* Hero Bereich */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1529042410759-befb1204b468?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            margin: 0 0 10px 0;
+            color: #f8b400;
+            text-transform: uppercase;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        .btn {
+            background-color: #f8b400;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn:hover {
+            background-color: #ffc107;
+            transform: scale(1.05);
+        }
+
+        /* Container für Inhalte */
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+        }
+
+        /* Über Uns */
+        .about {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+        }
+
+        /* Speisekarte */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .menu-item {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #f8b400;
+        }
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        .menu-item h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #1a1a1a;
+        }
+        .price {
+            font-weight: bold;
+            color: #d9534f;
+            font-size: 1.3rem;
+        }
+        .menu-item p {
+            color: #666;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Footer & Kontakt */
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: auto;
+            text-align: left;
+        }
+        .footer-content h4 {
+            color: #f8b400;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .footer-bottom {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="#" class="logo">Steak Döner</a>
+            <div class="nav-links">
+                <a href="#about">Über uns</a>
+                <a href="#menu">Speisekarte</a>
+                <a href="#contact">Kontakt</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Sektion -->
+    <section class="hero">
+        <h1>Der beste Steak Döner in Osnabrück</h1>
+        <p>100% Premium Rindfleisch. Täglich frisch gebackenes Brot. Hausgemachte Saucen.</p>
+        <a href="#menu" class="btn">Speisekarte ansehen</a>
+    </section>
+
+    <!-- Über Uns Sektion -->
+    <div class="container" id="about">
+        <h2>Echte Qualität schmeckt man</h2>
+        <div class="about">
+            <p>Vergiss den Standard. Bei uns gibt es kein Hackfleisch, sondern puren Genuss. Unser Fleisch besteht zu 100% aus hochwertigem Steakfleisch, das täglich frisch auf den Spieß gesteckt wird. Kombiniert mit knackigem, regionalem Gemüse aus dem Osnabrücker Land und unseren geheimen Saucen-Rezepten, bieten wir dir ein unvergleichliches Geschmackserlebnis.</p>
+        </div>
+    </div>
+
+    <!-- Speisekarte Sektion -->
+    <div class="container" id="menu">
+        <h2>Unsere Speisekarte</h2>
+        <div class="menu-grid">
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Classic Steak Döner</h3>
+                    <span class="price">8,50 €</span>
+                </div>
+                <p>Im frisch gebackenen Fladenbrot mit knackigem Salat, Tomaten, Gurken, Zwiebeln und Sauce nach Wahl.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Steak Döner Dürüm</h3>
+                    <span class="price">9,50 €</span>
+                </div>
+                <p>Eingerollt in frischem Yufka-Teig, prall gefüllt mit feinstem Steakfleisch, Salat und Saucen.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Premium Steak Teller</h3>
+                    <span class="price">14,90 €</span>
+                </div>
+                <p>Große Portion Steakfleisch, serviert mit Pommes frites oder Reis, Beilagensalat und Saucen.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Veggie Döner (Grillgemüse)</h3>
+                    <span class="price">6,50 €</span>
+                </div>
+                <p>Für unsere vegetarischen Freunde: Frisches Brot, gegrilltes Gemüse, Weichkäse und Spezial-Sauce.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer & Kontakt -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div>
+                <h4>Besuch uns</h4>
+                <p>Musterstraße 123<br>49074 Osnabrück<br>Deutschland</p>
+            </div>
+            <div>
+                <h4>Öffnungszeiten</h4>
+                <p>Mo - Do: 11:00 - 22:00 Uhr<br>
+                Fr - Sa: 11:00 - 00:00 Uhr<br>
+                So: 12:00 - 21:00 Uhr</p>
+            </div>
+            <div>
+                <h4>Kontakt</h4>
+                <p>Telefon: 0541 / 123 456 78<br>
+                E-Mail: hallo@steakdoener-osnabrueck.de</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Steak Döner Osnabrück. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
