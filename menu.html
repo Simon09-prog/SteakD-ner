@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speisekarte | Steak Döner Osnabrück</title>
+    <style>
+        /* Gleiches Basis-Styling wie auf der Startseite */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #1a1a1a;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        nav {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            color: #f8b400;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #f8b400;
+        }
+
+        /* Header für die Speisekarte */
+        .page-header {
+            background-color: #333;
+            color: #f8b400;
+            text-align: center;
+            padding: 40px 20px;
+            text-transform: uppercase;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 3rem;
+        }
+
+        /* Speisekarte Styling */
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+            min-height: 50vh;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .menu-item {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #f8b400;
+        }
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        .menu-item h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #1a1a1a;
+        }
+        .price {
+            font-weight: bold;
+            color: #d9534f;
+            font-size: 1.3rem;
+        }
+        .menu-item p {
+            color: #666;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Zurück-Button */
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            background-color: #333;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            border-top: 4px solid #f8b400;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Steak Döner</a>
+            <div class="nav-links">
+                <a href="index.html#about">Über uns</a>
+                <a href="menu.html">Speisekarte</a>
+                <a href="index.html#contact">Kontakt</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page-header">
+        <h1>Speisekarte</h1>
+    </div>
+
+    <!-- Speisekarte Sektion -->
+    <div class="container">
+        <div class="menu-grid">
+            
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Classic Steak Döner</h3>
+                    <span class="price">8,50 €</span>
+                </div>
+                <p>Im frisch gebackenen Fladenbrot mit knackigem Salat, Tomaten, Gurken, Zwiebeln und Sauce nach Wahl.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Steak Döner Dürüm</h3>
+                    <span class="price">9,50 €</span>
+                </div>
+                <p>Eingerollt in frischem Yufka-Teig, prall gefüllt mit feinstem Steakfleisch, Salat und Saucen.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Premium Steak Teller</h3>
+                    <span class="price">14,90 €</span>
+                </div>
+                <p>Große Portion Steakfleisch, serviert mit Pommes frites oder Reis, Beilagensalat und Saucen.</p>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-header">
+                    <h3>Veggie Döner (Grillgemüse)</h3>
+                    <span class="price">6,50 €</span>
+                </div>
+                <p>Für unsere vegetarischen Freunde: Frisches Brot, gegrilltes Gemüse, Weichkäse und Spezial-Sauce.</p>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">&larr; Zurück zur Startseite</a>
+    </div>
+
+    <!-- Simpler Footer für die Menüseite -->
+    <footer>
+        <p>&copy; 2026 Steak Döner Osnabrück. Bremer Str. 56.</p>
+    </footer>
+
+</body>
+</html>
