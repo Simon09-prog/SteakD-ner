@@ -1,0 +1,16 @@
+backend:
+  name: git-gateway
+  branch: main # Oder master, je nachdem wie dein Hauptbranch auf GitHub heißt
+
+media_folder: "images" # Falls du Bilder hochladen willst
+public_folder: "/images"
+
+collections:
+  - name: "speisekarte"
+    label: "Speisekarte"
+    folder: "_data" # Ordner für die Daten
+    create: true
+    fields:
+      - {label: "Titel des Gerichts", name: "title", widget: "string"}
+      - {label: "Preis", name: "price", widget: "string"}
+      - {label: "Beschreibung", name: "description", widget: "text"}
