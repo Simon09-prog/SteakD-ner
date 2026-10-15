@@ -2,7 +2,7 @@
 
 Ein inoffizieller Nachbau des täglichen Trivia-Spiels [krillion.io](https://krillion.io): Jeden Tag 7 Fragen, 25 Sekunden pro Frage. Jede richtige Antwort zählt, aber je **seltener** sie ist, desto mehr Punkte gibt es. Jeder Punkt bringt dich 10 m tiefer, ein perfekter Tauchgang (700 Punkte) erreicht den Grabenboden in 7.000 m Tiefe.
 
-Das Spiel selbst ist auf Englisch, wie das Original.
+Das Spiel ist komplett auf Deutsch, inklusive aller Fragen und Antwortbögen. Fragen, die nur im Englischen funktionieren (Reime, Palindrome usw.), wurden durch deutsche Varianten ersetzt.
 
 ## Starten
 
@@ -14,12 +14,12 @@ npx serve krillion
 
 ## Funktionen
 
-- **Daily Dive**: 7 Fragen pro Tag, für alle gleich (deterministisch nach Datum ausgewählt). Der Fortschritt wird gespeichert. Wer die Seite mitten in einer Antwort neu lädt, bekommt diese Frage als verpasst gewertet.
-- **Seltenheitsstufen**: Plankton (10), Too Clever (15), Schooler (30), Rare (60), Deep Cut (85), One in a Krillion (100).
-- **Endless Dive** und **Themenpakete** (Words & Language, At the Movies, Sports, Geography; Music folgt): unbegrenztes Üben, ohne Einfluss auf das Tagesergebnis.
+- **Tagestauchgang**: 7 Fragen pro Tag, für alle gleich (deterministisch nach Datum ausgewählt). Der Fortschritt wird gespeichert. Wer die Seite mitten in einer Antwort neu lädt, bekommt diese Frage als verpasst gewertet.
+- **Seltenheitsstufen**: Plankton (10), Neunmalklug (15), Mitschwimmer (30), Rarität (60), Tiefgang (85), Eins zu einer Million (100).
+- **Endlos-Tauchgang** und **Themenpakete** (Wörter & Sprache, Kino & Film, Sport, Geografie; Musik folgt): unbegrenztes Üben, ohne Einfluss auf das Tagesergebnis.
 - **Ergebnis-Screen** mit Tauchprofil, Emoji-Zeile zum Teilen und dem vollständigen Antwortbogen jeder Frage.
-- **Dive Log** mit Statistiken und Streaks (im `localStorage` des Browsers).
-- Die Antwortprüfung ignoriert Groß-/Kleinschreibung, Akzente, Artikel und Satzzeichen, faltet Pluralformen und toleriert kleine Tippfehler. Ausnahme: Fragen, bei denen es auf die exakte Schreibweise ankommt (z. B. Palindrome).
+- **Tauchlogbuch** mit Statistiken und Streaks (im `localStorage` des Browsers).
+- Die Antwortprüfung ignoriert Groß-/Kleinschreibung, Umlaute/Akzente, Artikel (der/die/das, the …) und Satzzeichen, versteht zusammengesetzte Wörter wie „Namibwüste" oder „Erzgebirge" und toleriert kleine Tippfehler. Ausnahme: Fragen, bei denen es auf die exakte Schreibweise ankommt (z. B. Palindrome).
 
 ## Fragen hinzufügen
 
@@ -27,11 +27,11 @@ Alle Fragen stehen in `js/data.js`. Jede Frage hat einen Antwortbogen pro Stufe,
 
 ```js
 {
-  id: 'germany-borders', pack: 'geo', q: `Name a country that borders Germany`,
-  p: `France; Austria; Poland; Switzerland`,
-  s: `Netherlands|Holland; Belgium; Denmark`,
-  r: `Czech Republic|Czechia`,
-  k: `Luxembourg::The smallest of Germany's nine neighbours.`,
+  id: 'germany-borders', pack: 'geo', q: `Nenne ein Nachbarland von Deutschland`,
+  p: `Frankreich; Österreich; Polen; Schweiz`,
+  s: `Niederlande|Holland; Belgien; Dänemark`,
+  r: `Tschechien|Tschechische Republik`,
+  k: `Luxemburg::Der kleinste der neun Nachbarn.`,
 }
 ```
 

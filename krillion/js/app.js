@@ -18,23 +18,23 @@
   const DAY_MS = 864e5;
 
   const TIERS = {
-    krillion: { name: 'One in a Krillion', pts: 100, emoji: '🦐', blurb: 'The single rarest answer on the sheet. Legendary.' },
-    deep: { name: 'Deep Cut', pts: 85, emoji: '🦑', blurb: 'Barely anyone went this deep.' },
-    rare: { name: 'Rare', pts: 60, emoji: '🐠', blurb: 'Off the beaten reef.' },
-    schooler: { name: 'Schooler', pts: 30, emoji: '🐟', blurb: 'Swimming with a decent-sized school.' },
-    clever: { name: 'Too Clever', pts: 15, emoji: '🤓', blurb: 'Technically correct. We see what you did there.' },
-    plankton: { name: 'Plankton', pts: 10, emoji: '🫧', blurb: 'Everybody floated here.' },
-    miss: { name: 'Missed', pts: 0, emoji: '⬛', blurb: 'Nothing on the sheet this time.' },
+    krillion: { name: 'Eins zu einer Million', pts: 100, emoji: '🦐', blurb: 'Die seltenste Antwort auf dem ganzen Bogen. Legendär.' },
+    deep: { name: 'Tiefgang', pts: 85, emoji: '🦑', blurb: 'So tief ist kaum jemand getaucht.' },
+    rare: { name: 'Rarität', pts: 60, emoji: '🐠', blurb: 'Weit abseits vom Riff.' },
+    schooler: { name: 'Mitschwimmer', pts: 30, emoji: '🐟', blurb: 'Du schwimmst in einem ordentlichen Schwarm.' },
+    clever: { name: 'Neunmalklug', pts: 15, emoji: '🤓', blurb: 'Schlau gedacht. Wir sehen, was du da gemacht hast.' },
+    plankton: { name: 'Plankton', pts: 10, emoji: '🫧', blurb: 'Hier treiben alle.' },
+    miss: { name: 'Verpasst', pts: 0, emoji: '⬛', blurb: 'Diesmal nichts auf dem Bogen.' },
   };
   const TIER_ORDER = ['krillion', 'deep', 'rare', 'schooler', 'clever', 'plankton'];
   const SHEET_CODES = [['p', 'plankton'], ['c', 'clever'], ['s', 'schooler'], ['r', 'rare'], ['d', 'deep'], ['k', 'krillion']];
 
   const ZONES = [
-    { name: 'Sunlight Zone', from: 0, to: 200, flavor: 'You bobbed around with the sea turtles.' },
-    { name: 'Twilight Zone', from: 200, to: 1000, flavor: 'Lanternfish blinked at you in the gloom.' },
-    { name: 'Midnight Zone', from: 1000, to: 4000, flavor: 'You made it to anglerfish territory.' },
-    { name: 'Abyssal Zone', from: 4000, to: 6000, flavor: 'Dumbo octopuses waved you past.' },
-    { name: 'Hadal Zone', from: 6000, to: MAX_DEPTH, flavor: 'Snailfish country — the deepest trenches on Earth.' },
+    { name: 'Sonnenlichtzone', short: 'Licht', from: 0, to: 200, flavor: 'Du bist mit den Meeresschildkröten herumgedümpelt.' },
+    { name: 'Dämmerzone', short: 'Zwielicht', from: 200, to: 1000, flavor: 'Laternenfische haben dir im Halbdunkel zugeblinkt.' },
+    { name: 'Mitternachtszone', short: 'Nacht', from: 1000, to: 4000, flavor: 'Du hast es bis ins Revier der Anglerfische geschafft.' },
+    { name: 'Abyssalzone', short: 'Abyssal', from: 4000, to: 6000, flavor: 'Dumbo-Oktopusse haben dir zugewinkt.' },
+    { name: 'Hadalzone', short: 'Hadal', from: 6000, to: MAX_DEPTH, flavor: 'Scheibenbäuche, so weit das Auge reicht — die tiefsten Gräben der Erde.' },
   ];
 
   const REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,7 +42,8 @@
   /* ───────────────────────────── Utilities ───────────────────────────── */
 
   const $ = (sel, root = document) => root.querySelector(sel);
-  const fmt = (n) => Math.round(n).toLocaleString('en-US');
+  const LOCALE = 'de-DE';
+  const fmt = (n) => Math.round(n).toLocaleString(LOCALE);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -88,21 +89,29 @@
   /* ─────────────────────────── Answer matching ─────────────────────────── */
 
   const ROMANISH = /^(?:\d+|i{1,3}|iv|vi{0,3}|ix|x)$/;
+  const ARTICLES = new Set(['the', 'a', 'an', 'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen']);
 
   function tokens(text, prompt) {
     let t = String(text)
       .normalize('NFD').replace(/[̀-ͯ]/g, '')
       .toLowerCase()
       .replace(/ß/g, 'ss').replace(/[æ]/g, 'ae').replace(/[œ]/g, 'oe').replace(/[øØ]/g, 'o').replace(/[łŁ]/g, 'l')
-      .replace(/&/g, ' and ')
+      .replace(/&/g, ' und ')
       .replace(/['’‘`´ʻ]/g, '')
       .replace(/[^a-z0-9]+/g, ' ')
       .trim();
-    let words = t ? t.split(' ') : [];
-    if (words.length > 1 && (words[0] === 'the' || words[0] === 'a' || words[0] === 'an')) words.shift();
-    if (prompt.strip && words.length > 1) {
-      const kept = words.filter((w) => !prompt.strip.includes(w));
-      if (kept.length) words = kept;
+    // "&", "and" and "und" all read the same, so "Romeo & Julia" meets "Romeo und Julia".
+    let words = t ? t.split(' ').map((w) => (w === 'and' ? 'und' : w)) : [];
+    if (words.length > 1 && ARTICLES.has(words[0])) words.shift();
+    if (prompt.strip) {
+      if (words.length > 1) {
+        const kept = words.filter((w) => !prompt.strip.includes(w));
+        if (kept.length) words = kept;
+      }
+      // German compounds glue the filler on: "Namibwüste", "Erzgebirge".
+      const last = words.length - 1;
+      const suffix = last >= 0 && prompt.strip.find((s) => words[last].endsWith(s) && words[last].length >= s.length + 3);
+      if (suffix) words[last] = words[last].slice(0, -suffix.length);
     }
     return words;
   }
@@ -429,7 +438,7 @@
       const saved = loadDaily(diveNo);
       const ids = saved && saved.ids ? saved.ids : dailyPromptIds(diveNo);
       const results = saved && saved.results ? saved.results.map((r) => (r.pending ? { id: r.id, tier: 'miss', pts: 0, answer: '', tries: r.tries || [] } : r)) : [];
-      return { mode, diveNo, title: `Daily Dive #${diveNo}`, ids, results, done: !!(saved && saved.done) };
+      return { mode, diveNo, title: `Tagestauchgang #${diveNo}`, ids, results, done: !!(saved && saved.done) };
     }
     if (mode === 'pack') {
       const pack = PACK_BY_ID.get(opts.packId);
@@ -440,7 +449,7 @@
     const fresh = PROMPTS.map((p) => p.id).filter((id) => !last.includes(id));
     const ids = shuffle(fresh.length >= ROUNDS ? fresh : PROMPTS.map((p) => p.id)).slice(0, ROUNDS);
     store.set('endless:last', ids);
-    return { mode: 'endless', title: 'Endless Dive', ids, results: [], done: false };
+    return { mode: 'endless', title: 'Endlos-Tauchgang', ids, results: [], done: false };
   }
 
   const gameDepth = (g) => totalPoints(g.results) * M_PER_POINT;
@@ -488,10 +497,10 @@
     const zones = ZONES.map((z) => {
       const top = (z.from / MAX_DEPTH) * 100;
       const height = ((z.to - z.from) / MAX_DEPTH) * 100;
-      return `<div class="gauge-zone" style="top:${top}%;height:${height}%"><span>${z.name.replace(' Zone', '')}</span></div>`;
+      return `<div class="gauge-zone" style="top:${top}%;height:${height}%"><span>${z.short}</span></div>`;
     }).join('');
     const ticks = [1000, 2000, 3000, 4000, 5000, 6000].map((d) => `<div class="gauge-tick" style="top:${(d / MAX_DEPTH) * 100}%"><span>${d / 1000}k</span></div>`).join('');
-    return `<aside class="gauge" aria-hidden="true"><div class="gauge-track">${zones}${ticks}<div class="gauge-fill"></div><div class="gauge-marker">${KRILL_SVG}</div></div><div class="gauge-floor">7,000 m</div></aside>`;
+    return `<aside class="gauge" aria-hidden="true"><div class="gauge-track">${zones}${ticks}<div class="gauge-fill"></div><div class="gauge-marker">${KRILL_SVG}</div></div><div class="gauge-floor">${fmt(MAX_DEPTH)} m</div></aside>`;
   }
 
   function setGauge(depth) {
@@ -525,7 +534,7 @@
     ocean.dive(0, null, 900);
     const n = diveNumber();
     const saved = loadDaily(n);
-    const dateLabel = dateOfDive(n).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const dateLabel = dateOfDive(n).toLocaleDateString(LOCALE, { weekday: 'long', month: 'long', day: 'numeric' });
 
     let dailyBody;
     if (saved && saved.done) {
@@ -534,25 +543,25 @@
         <div class="daily-done">
           <div class="daily-depth"><strong>${fmt(pts * M_PER_POINT)}</strong><span>m</span></div>
           <div class="daily-meta">
-            <div class="emoji-row" aria-label="Your tiers">${emojiRow(saved.results)}</div>
-            <p>${fmt(pts)} / 700 points · ${zoneFor(pts * M_PER_POINT).name}</p>
+            <div class="emoji-row" aria-label="Deine Stufen">${emojiRow(saved.results)}</div>
+            <p>${fmt(pts)} / 700 Punkte · ${zoneFor(pts * M_PER_POINT).name}</p>
           </div>
         </div>
         <div class="card-actions">
-          <button class="btn primary" data-act="daily-results">View results</button>
-          <p class="next-dive">Next dive in <strong id="nextDive">${formatCountdown(msUntilNextDive())}</strong></p>
+          <button class="btn primary" data-act="daily-results">Ergebnis ansehen</button>
+          <p class="next-dive">Nächster Tauchgang in <strong id="nextDive">${formatCountdown(msUntilNextDive())}</strong></p>
         </div>`;
     } else if (saved && saved.results && saved.results.length) {
       const pts = totalPoints(saved.results.filter((r) => !r.pending));
       dailyBody = `
-        <p class="daily-copy">You're ${saved.results.length} of ${ROUNDS} prompts in, at <strong>${fmt(pts * M_PER_POINT)} m</strong>. Your air is waiting.</p>
-        <div class="card-actions"><button class="btn primary big" data-act="start-daily">Continue dive</button></div>`;
+        <p class="daily-copy">Du hast ${saved.results.length} von ${ROUNDS} Fragen geschafft und bist auf <strong>${fmt(pts * M_PER_POINT)} m</strong>. Deine Luft wartet.</p>
+        <div class="card-actions"><button class="btn primary big" data-act="start-daily">Tauchgang fortsetzen</button></div>`;
     } else {
       dailyBody = `
         <ul class="daily-facts">
-          <li><strong>7</strong> prompts</li><li><strong>25</strong> seconds each</li><li>Rarer answers dive <strong>deeper</strong></li>
+          <li><strong>7</strong> Fragen</li><li><strong>25</strong> Sekunden pro Frage</li><li>Seltenere Antworten tauchen <strong>tiefer</strong></li>
         </ul>
-        <div class="card-actions"><button class="btn primary big" data-act="start-daily">Start today's dive ${ICONS.down}</button></div>`;
+        <div class="card-actions"><button class="btn primary big" data-act="start-daily">Tauchgang starten ${ICONS.down}</button></div>`;
     }
 
     const packs = PACKS.map((p) => {
@@ -562,7 +571,7 @@
         <span class="pack-icon" aria-hidden="true">${p.icon}</span>
         <span class="pack-name">${esc(p.name)}</span>
         <span class="pack-blurb">${esc(p.blurb)}</span>
-        <span class="pack-meta">${p.soon ? 'Coming soon' : `${count} prompts · practice`}</span>
+        <span class="pack-meta">${p.soon ? 'Bald verfügbar' : `${count} Fragen · Training`}</span>
       </button>`;
     }).join('');
 
@@ -571,12 +580,12 @@
         <div class="hero">
           <div class="mascot">${KRILL_SVG}</div>
           <h1 class="wordmark">Krillion</h1>
-          <p class="tagline">Dive as deep as you can by giving <em>rare</em> answers to each trivia question.</p>
+          <p class="tagline">Tauche so tief du kannst — mit <em>seltenen</em> Antworten auf jede Quizfrage.</p>
         </div>
 
         <article class="card daily">
           <header class="card-head">
-            <span class="eyebrow">Daily Dive #${n}</span>
+            <span class="eyebrow">Tagestauchgang #${n}</span>
             <span class="date">${dateLabel}</span>
           </header>
           ${dailyBody}
@@ -584,19 +593,19 @@
 
         <article class="card endless">
           <div>
-            <h2>Endless Dive</h2>
-            <p>Seven random prompts from every pack. Play as often as you like — it never touches your daily result.</p>
+            <h2>Endlos-Tauchgang</h2>
+            <p>Sieben zufällige Fragen aus allen Paketen. Spiel so oft du willst — dein Tagesergebnis bleibt davon unberührt.</p>
           </div>
-          <button class="btn ghost" data-act="endless">Dive again</button>
+          <button class="btn ghost" data-act="endless">Abtauchen</button>
         </article>
 
         <section class="packs" aria-labelledby="packs-title">
-          <h2 id="packs-title">Themed packs</h2>
+          <h2 id="packs-title">Themenpakete</h2>
           <div class="pack-grid">${packs}</div>
         </section>
 
         <footer class="foot">
-          <p>An unofficial, fan-made recreation of the krillion.io daily dive. Answer sheets and rarity tiers are hand-curated, so the depth you reach is a guide, not gospel.</p>
+          <p>Ein inoffizieller Fan-Nachbau des Tagestauchgangs von krillion.io. Antwortbögen und Seltenheitsstufen sind von Hand zusammengestellt — die erreichte Tiefe ist also ein Richtwert.</p>
         </footer>
       </section>`, 'is-home');
 
@@ -627,9 +636,9 @@
     show(`
       <section class="screen game">
         <div class="game-bar">
-          <button class="icon-btn" data-act="quit" aria-label="Back to the surface" title="Back to the surface">${ICONS.close}</button>
-          <div class="game-title"><span class="eyebrow">${esc(game.title)}</span><ol class="pips" aria-label="Progress">${pips}</ol></div>
-          <div class="depth-readout" aria-live="off"><span class="depth-num"><strong id="depthNum">0</strong> m</span><span id="zoneName" class="zone-name">Sunlight Zone</span></div>
+          <button class="icon-btn" data-act="quit" aria-label="Zurück an die Oberfläche" title="Zurück an die Oberfläche">${ICONS.close}</button>
+          <div class="game-title"><span class="eyebrow">${esc(game.title)}</span><ol class="pips" aria-label="Fortschritt">${pips}</ol></div>
+          <div class="depth-readout" aria-live="off"><span class="depth-num"><strong id="depthNum">0</strong> m</span><span id="zoneName" class="zone-name">${ZONES[0].name}</span></div>
         </div>
         <div class="game-body">
           ${gaugeMarkup()}
@@ -644,7 +653,7 @@
       const r = game.results[i];
       el.className = 'pip' + (r ? ` done tier-${r.tier || 'miss'}` : '') + (i === game.results.length && !game.done ? ' current' : '');
       el.textContent = r ? TIERS[r.tier || 'miss'].emoji : '';
-      el.setAttribute('aria-label', r ? `Prompt ${i + 1}: ${TIERS[r.tier || 'miss'].name}` : `Prompt ${i + 1}`);
+      el.setAttribute('aria-label', r ? `Frage ${i + 1}: ${TIERS[r.tier || 'miss'].name}` : `Frage ${i + 1}`);
     });
   }
 
@@ -658,16 +667,16 @@
     }
     game.round = { prompt, tries: [], phase: 'preview' };
     updatePips();
-    const packName = prompt.pack !== 'mixed' && PACK_BY_ID.get(prompt.pack) ? PACK_BY_ID.get(prompt.pack).name : 'Mixed bag';
+    const packName = prompt.pack !== 'mixed' && PACK_BY_ID.get(prompt.pack) ? PACK_BY_ID.get(prompt.pack).name : 'Gemischt';
     $('#promptCard').innerHTML = `
-      <div class="prompt-meta"><span class="eyebrow">Prompt ${i + 1} of ${game.ids.length}</span><span class="pack-tag">${esc(packName)}</span></div>
+      <div class="prompt-meta"><span class="eyebrow">Frage ${i + 1} von ${game.ids.length}</span><span class="pack-tag">${esc(packName)}</span></div>
       <h2 class="prompt-q">${esc(prompt.q)}</h2>
-      <div class="timer" id="timer" role="timer" aria-label="Time left">
+      <div class="timer" id="timer" role="timer" aria-label="Verbleibende Zeit">
         <svg viewBox="0 0 64 64" aria-hidden="true"><circle class="timer-bg" cx="32" cy="32" r="28"/><circle class="timer-fg" id="timerRing" cx="32" cy="32" r="28" pathLength="100"/></svg>
         <span id="timerNum">3</span>
       </div>
       <div class="round-body" id="roundBody">
-        <p class="get-ready">Get ready to dive…</p>
+        <p class="get-ready">Mach dich bereit zum Abtauchen …</p>
       </div>`;
     $('#promptCard').classList.remove('revealed');
     runClock(PREVIEW_MS, 'preview', () => openAnswerWindow());
@@ -705,13 +714,13 @@
     }
     $('#roundBody').innerHTML = `
       <form class="answer-form" id="answerForm" autocomplete="off" novalidate>
-        <label class="sr-only" for="answer">Your answer</label>
-        <input id="answer" name="answer" type="text" maxlength="80" placeholder="Type a rare answer…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
-        <button class="btn primary" type="submit">Dive ${ICONS.down}</button>
+        <label class="sr-only" for="answer">Deine Antwort</label>
+        <input id="answer" name="answer" type="text" maxlength="80" placeholder="Deine seltene Antwort …" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+        <button class="btn primary" type="submit">Tauchen ${ICONS.down}</button>
       </form>
       <p class="feedback" id="feedback" aria-live="polite"></p>
-      <ul class="tries" id="tries" aria-label="Answers not on the sheet"></ul>
-      <button class="link-btn" data-act="skip">Skip this prompt</button>`;
+      <ul class="tries" id="tries" aria-label="Antworten, die nicht auf dem Bogen stehen"></ul>
+      <button class="link-btn" data-act="skip">Frage überspringen</button>`;
     const input = $('#answer');
     input.focus({ preventScroll: true });
     $('#answerForm').addEventListener('submit', (e) => {
@@ -732,7 +741,7 @@
     const fb = $('#feedback');
     const already = round.tries.some((t) => t.toLowerCase() === text.toLowerCase());
     if (!already) round.tries.push(text);
-    fb.textContent = already ? `You already tried “${text}”.` : `“${text}” isn't on the answer sheet. Try another!`;
+    fb.textContent = already ? `„${text}" hast du schon probiert.` : `„${text}" steht nicht auf dem Antwortbogen. Versuch es nochmal!`;
     $('#tries').innerHTML = round.tries.map((t) => `<li>${esc(t)}</li>`).join('');
     const input = $('#answer');
     input.value = '';
@@ -762,8 +771,8 @@
     const last = game.results.length >= game.ids.length;
     const note = hit && hit.entry.note ? hit.entry.note : TIERS[tier].blurb;
     const missText = reason === 'skip'
-      ? 'You skipped this one.'
-      : round.tries.length ? 'Out of air — nothing you tried was on the sheet.' : 'Out of air — the timer ran out.';
+      ? 'Du hast diese Frage übersprungen.'
+      : round.tries.length ? 'Keine Luft mehr — nichts davon stand auf dem Bogen.' : 'Keine Luft mehr — die Zeit ist abgelaufen.';
 
     $('#promptCard').classList.add('revealed');
     $('#timer').classList.remove('urgent');
@@ -771,12 +780,12 @@
       <div class="reveal tier-${tier}">
         ${tierBadge(tier)}
         ${hit
-          ? `<p class="reveal-answer">“${esc(hit.text)}”${hit.fuzzy || keyDiffers(hit.text, hit.entry.label, round.prompt) ? `<span class="matched">counted as ${esc(hit.entry.label)}</span>` : ''}</p>`
+          ? `<p class="reveal-answer">„${esc(hit.text)}"${hit.fuzzy || keyDiffers(hit.text, hit.entry.label, round.prompt) ? `<span class="matched">gewertet als ${esc(hit.entry.label)}</span>` : ''}</p>`
           : `<p class="reveal-answer muted">${missText}</p>`}
-        <p class="reveal-points">${pts ? `+${pts} pts <span class="sep">·</span> <span class="descent">${ICONS.down} ${fmt(pts * M_PER_POINT)} m</span>` : 'You hold your depth.'}</p>
+        <p class="reveal-points">${pts ? `+${pts} Punkte <span class="sep">·</span> <span class="descent">${ICONS.down} ${fmt(pts * M_PER_POINT)} m</span>` : 'Du hältst deine Tiefe.'}</p>
         <p class="reveal-note">${esc(note)}</p>
-        ${common.length ? `<p class="reveal-common"><span>Most common:</span> ${common.map(esc).join(' · ')}</p>` : ''}
-        <button class="btn primary" data-act="next" id="nextBtn">${last ? 'Finish dive' : 'Next prompt'} <span aria-hidden="true">→</span></button>
+        ${common.length ? `<p class="reveal-common"><span>Am häufigsten:</span> ${common.map(esc).join(' · ')}</p>` : ''}
+        <button class="btn primary" data-act="next" id="nextBtn">${last ? 'Tauchgang beenden' : 'Nächste Frage'} <span aria-hidden="true">→</span></button>
       </div>`;
     updatePips();
     ocean.dive(depth, setGauge, depth === prevDepth ? 0 : 1400);
@@ -799,13 +808,13 @@
     if (!game || game.done) return renderHome();
     if (game.mode === 'daily') {
       return confirmModal({
-        title: 'Surface early?',
-        body: 'Your daily progress is saved. A prompt you leave mid-answer will count as a miss when you come back.',
-        ok: 'Back to the surface',
+        title: 'Früher auftauchen?',
+        body: 'Dein Tagesfortschritt ist gespeichert. Eine Frage, die du mitten in der Antwort verlässt, zählt beim Zurückkommen als verpasst.',
+        ok: 'Zurück an die Oberfläche',
         onOk: renderHome,
       });
     }
-    return confirmModal({ title: 'Abandon this dive?', body: 'Practice dives aren\'t saved — you\'ll lose this run.', ok: 'Abandon dive', onOk: renderHome });
+    return confirmModal({ title: 'Tauchgang abbrechen?', body: 'Trainingstauchgänge werden nicht gespeichert — dieser Lauf geht verloren.', ok: 'Tauchgang abbrechen', onOk: renderHome });
   }
 
   /* Results --------------------------------------------------------------- */
@@ -813,7 +822,7 @@
   function profileSvg(results) {
     const W = 640;
     const H = 260;
-    const padL = 64;
+    const padL = 78;
     const padR = 24;
     const padT = 18;
     const padB = 30;
@@ -822,14 +831,14 @@
     // The Sunlight Zone is only a few pixels tall at this scale, so thin bands go unlabelled.
     const bands = ZONES.map((z, i) => `
       <rect x="${padL}" y="${y(z.from)}" width="${W - padL - padR}" height="${y(z.to) - y(z.from)}" class="band band-${i}"/>
-      ${y(z.to) - y(z.from) >= 14 ? `<text x="${padL - 8}" y="${(y(z.from) + y(z.to)) / 2 + 4}" class="band-label" text-anchor="end">${z.name.replace(' Zone', '')}</text>` : ''}`).join('');
+      ${y(z.to) - y(z.from) >= 14 ? `<text x="${padL - 8}" y="${(y(z.from) + y(z.to)) / 2 + 4}" class="band-label" text-anchor="end">${z.short}</text>` : ''}`).join('');
     let depth = 0;
     const pts = [[x(0), y(0)]];
     const dots = [];
     results.forEach((r, i) => {
       depth += (r.pts || 0) * M_PER_POINT;
       pts.push([x(i + 1), y(depth)]);
-      dots.push(`<circle cx="${x(i + 1)}" cy="${y(depth)}" r="6.5" class="dot tier-${r.tier || 'miss'}"><title>Prompt ${i + 1}: ${TIERS[r.tier || 'miss'].name}, ${fmt(depth)} m</title></circle>`);
+      dots.push(`<circle cx="${x(i + 1)}" cy="${y(depth)}" r="6.5" class="dot tier-${r.tier || 'miss'}"><title>Frage ${i + 1}: ${TIERS[r.tier || 'miss'].name}, ${fmt(depth)} m</title></circle>`);
     });
     let d = `M${pts[0][0]},${pts[0][1]}`;
     for (let i = 1; i < pts.length; i++) {
@@ -841,7 +850,7 @@
     const area = `${d} L${pts[pts.length - 1][0]},${y(0)} Z`;
     const xLabels = Array.from({ length: ROUNDS }, (_, i) => `<text x="${x(i + 1)}" y="${H - 8}" class="axis-label" text-anchor="middle">${i + 1}</text>`).join('');
     return `
-      <svg class="profile" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dive profile: depth after each prompt">
+      <svg class="profile" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tauchprofil: Tiefe nach jeder Frage">
         ${bands}
         <path d="${area}" class="profile-area"/>
         <path d="${d}" class="profile-line"/>
@@ -867,9 +876,9 @@
   function shareText(g) {
     const pts = totalPoints(g.results);
     const depth = pts * M_PER_POINT;
-    const head = g.mode === 'daily' ? `Krillion Daily Dive #${g.diveNo}` : `Krillion · ${g.title}`;
+    const head = g.mode === 'daily' ? `Krillion Tagestauchgang #${g.diveNo}` : `Krillion · ${g.title}`;
     const url = /^https?:/.test(location.protocol) ? `\n${location.origin}${location.pathname}` : '';
-    return `${head}\n${emojiRow(g.results)}\n${fmt(depth)} m · ${pts}/700 pts · ${zoneFor(depth).name}${url}`;
+    return `${head}\n${emojiRow(g.results)}\n${fmt(depth)} m · ${pts}/700 Punkte · ${zoneFor(depth).name}${url}`;
   }
 
   function renderResults(g) {
@@ -892,13 +901,13 @@
               <span class="round-no">${i + 1}</span>
               <span class="round-main">
                 <span class="round-q">${esc(prompt.q)}</span>
-                <span class="round-a">${r.answer ? `“${esc(r.answer)}”` : '<em>No answer</em>'}</span>
+                <span class="round-a">${r.answer ? `„${esc(r.answer)}"` : '<em>Keine Antwort</em>'}</span>
               </span>
               ${tierBadge(r.tier, true)}
             </summary>
             <div class="sheet">
-              ${r.tries && r.tries.length ? `<p class="sheet-tries">Not on the sheet: ${r.tries.map(esc).join(', ')}</p>` : ''}
-              <p class="sheet-intro">Full answer sheet · ${sheet.entries.length} accepted answers</p>
+              ${r.tries && r.tries.length ? `<p class="sheet-tries">Nicht auf dem Bogen: ${r.tries.map(esc).join(', ')}</p>` : ''}
+              <p class="sheet-intro">Vollständiger Antwortbogen · ${sheet.entries.length} akzeptierte Antworten</p>
               ${sheetMarkup(prompt, picked)}
             </div>
           </details>
@@ -908,27 +917,27 @@
     show(`
       <section class="screen results">
         <article class="card results-hero">
-          <span class="eyebrow">${esc(g.title)} · complete</span>
+          <span class="eyebrow">${esc(g.title)} · geschafft</span>
           <div class="final-depth"><span id="finalDepth">${fmt(depth)}</span><small>m</small></div>
-          <p class="final-sub">${fmt(pts)} / 700 points · ${zone.name}</p>
-          <p class="final-flavor">${perfect ? 'You touched the trench floor. A perfect dive!' : zone.flavor}</p>
-          <div class="emoji-row big" aria-label="Your tiers">${emojiRow(g.results)}</div>
-          ${best && best.tier && best.tier !== 'miss' ? `<p class="best">Deepest answer: <strong>“${esc(best.answer)}”</strong> ${tierBadge(best.tier, true)}</p>` : ''}
+          <p class="final-sub">${fmt(pts)} / 700 Punkte · ${zone.name}</p>
+          <p class="final-flavor">${perfect ? 'Du hast den Grabenboden berührt. Ein perfekter Tauchgang!' : zone.flavor}</p>
+          <div class="emoji-row big" aria-label="Deine Stufen">${emojiRow(g.results)}</div>
+          ${best && best.tier && best.tier !== 'miss' ? `<p class="best">Tiefste Antwort: <strong>„${esc(best.answer)}"</strong> ${tierBadge(best.tier, true)}</p>` : ''}
           <div class="card-actions row">
-            <button class="btn primary" data-act="share">${ICONS.share} Share result</button>
-            ${g.mode === 'daily' ? '<button class="btn ghost" data-act="endless">Play Endless Dive</button>' : `<button class="btn ghost" data-act="again">Dive again</button>`}
-            <button class="btn ghost" data-act="home">Back to the surface</button>
+            <button class="btn primary" data-act="share">${ICONS.share} Ergebnis teilen</button>
+            ${g.mode === 'daily' ? '<button class="btn ghost" data-act="endless">Endlos-Tauchgang spielen</button>' : `<button class="btn ghost" data-act="again">Nochmal tauchen</button>`}
+            <button class="btn ghost" data-act="home">Zurück an die Oberfläche</button>
           </div>
         </article>
 
         <article class="card">
-          <h3>Dive profile</h3>
+          <h3>Tauchprofil</h3>
           ${profileSvg(g.results)}
         </article>
 
         <article class="card">
-          <h3>Your answers &amp; the answer sheets</h3>
-          <p class="muted small">Tap a prompt to see every accepted answer and its tier.</p>
+          <h3>Deine Antworten &amp; die Antwortbögen</h3>
+          <p class="muted small">Tippe auf eine Frage, um alle akzeptierten Antworten und ihre Stufe zu sehen.</p>
           <ol class="round-list">${rounds}</ol>
         </article>
       </section>`, 'is-results');
@@ -958,7 +967,7 @@
     }
     try {
       await navigator.clipboard.writeText(text);
-      toast('Result copied to clipboard');
+      toast('Ergebnis in die Zwischenablage kopiert');
     } catch (e) {
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -970,7 +979,7 @@
       let ok = false;
       try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
       ta.remove();
-      toast(ok ? 'Result copied to clipboard' : 'Copy failed — select the emoji row instead');
+      toast(ok ? 'Ergebnis in die Zwischenablage kopiert' : 'Kopieren fehlgeschlagen — markiere stattdessen die Emoji-Zeile');
     }
   }
 
@@ -1018,7 +1027,7 @@
       const d = new Date(e.date);
       return `
         <li class="log-row">
-          <span class="log-title">${esc(e.title)}<small>${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</small></span>
+          <span class="log-title">${esc(e.title)}<small>${d.toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' })}, ${d.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' })} Uhr</small></span>
           <span class="emoji-row">${e.tiers.map((t) => TIERS[t || 'miss'].emoji).join('')}</span>
           <span class="log-depth">${fmt(e.points * M_PER_POINT)} m</span>
         </li>`;
@@ -1027,25 +1036,25 @@
     show(`
       <section class="screen log">
         <header class="screen-head">
-          <h1>Dive log</h1>
-          <p class="muted">Saved in this browser only.</p>
+          <h1>Tauchlogbuch</h1>
+          <p class="muted">Nur in diesem Browser gespeichert.</p>
         </header>
         <div class="stats-grid">
-          <div class="stat card"><strong>${daily.length}</strong><span>Daily dives</span></div>
-          <div class="stat card"><strong>${fmt(avg)}<small> m</small></strong><span>Average depth</span></div>
-          <div class="stat card"><strong>${fmt(deepest)}<small> m</small></strong><span>Deepest dive</span></div>
-          <div class="stat card"><strong>${current}</strong><span>Current streak</span></div>
-          <div class="stat card"><strong>${best}</strong><span>Best streak</span></div>
+          <div class="stat card"><strong>${daily.length}</strong><span>Tagestauchgänge</span></div>
+          <div class="stat card"><strong>${fmt(avg)}<small> m</small></strong><span>Durchschnittstiefe</span></div>
+          <div class="stat card"><strong>${fmt(deepest)}<small> m</small></strong><span>Tiefster Tauchgang</span></div>
+          <div class="stat card"><strong>${current}</strong><span>Aktuelle Serie</span></div>
+          <div class="stat card"><strong>${best}</strong><span>Beste Serie</span></div>
         </div>
         <article class="card">
-          <h3>Every answer, by tier</h3>
+          <h3>Alle Antworten nach Stufe</h3>
           <ul class="tally-list">${bars}</ul>
         </article>
         <article class="card">
-          <h3>Recent dives</h3>
-          ${entries ? `<ol class="log-list">${entries}</ol>` : '<p class="muted">No dives logged yet. The water\'s lovely — jump in!</p>'}
+          <h3>Letzte Tauchgänge</h3>
+          ${entries ? `<ol class="log-list">${entries}</ol>` : '<p class="muted">Noch keine Tauchgänge im Logbuch. Das Wasser ist herrlich — spring rein!</p>'}
         </article>
-        <div class="card-actions center"><button class="btn ghost" data-act="home">Back to the surface</button></div>
+        <div class="card-actions center"><button class="btn ghost" data-act="home">Zurück an die Oberfläche</button></div>
       </section>`, 'is-log');
   }
 
@@ -1059,7 +1068,7 @@
     root.innerHTML = `
       <div class="modal-backdrop" data-act="close-modal"></div>
       <div class="modal card" role="dialog" aria-modal="true" aria-label="${esc(label)}">
-        <button class="icon-btn modal-close" data-act="close-modal" aria-label="Close">${ICONS.close}</button>
+        <button class="icon-btn modal-close" data-act="close-modal" aria-label="Schließen">${ICONS.close}</button>
         ${html}
       </div>`;
     root.classList.add('open');
@@ -1079,7 +1088,7 @@
       <h2>${esc(title)}</h2>
       <p>${esc(body)}</p>
       <div class="card-actions row end">
-        <button class="btn ghost" data-act="close-modal">Keep diving</button>
+        <button class="btn ghost" data-act="close-modal">Weitertauchen</button>
         <button class="btn primary" data-act="confirm-ok">${esc(ok)}</button>
       </div>`, title);
     confirmModal.onOk = onOk;
@@ -1090,19 +1099,19 @@
       <li>${tierBadge(t, true)}<span>${TIERS[t].blurb}</span><strong>${fmt(TIERS[t].pts * M_PER_POINT)} m</strong></li>`).join('');
     const zones = ZONES.map((z) => `<li><span>${z.name}</span><span>${fmt(z.from)}–${fmt(z.to)} m</span></li>`).join('');
     openModal(`
-      <h2>How to play</h2>
+      <h2>So wird gespielt</h2>
       <ol class="rules">
-        <li>Every day brings a new dive of <strong>7 prompts</strong> — the same for everyone.</li>
-        <li>You get <strong>25 seconds</strong> per prompt. Wrong guesses cost nothing but time, so keep typing.</li>
-        <li>Any answer on the sheet counts, but the <strong>rarer</strong> it is, the more points it scores.</li>
-        <li>Every point takes you <strong>10 m deeper</strong>. A perfect dive (700 points) reaches the trench floor at 7,000 m.</li>
+        <li>Jeden Tag gibt es einen neuen Tauchgang mit <strong>7 Fragen</strong> — für alle dieselben.</li>
+        <li>Du hast <strong>25 Sekunden</strong> pro Frage. Falsche Versuche kosten nur Zeit, also tipp einfach weiter.</li>
+        <li>Jede Antwort auf dem Bogen zählt — aber je <strong>seltener</strong> sie ist, desto mehr Punkte gibt es.</li>
+        <li>Jeder Punkt bringt dich <strong>10 m tiefer</strong>. Ein perfekter Tauchgang (700 Punkte) erreicht den Grabenboden in ${fmt(MAX_DEPTH)} m Tiefe.</li>
       </ol>
-      <h3>Rarity tiers</h3>
+      <h3>Seltenheitsstufen</h3>
       <ul class="tier-table">${tiers}</ul>
-      <h3>Ocean zones</h3>
+      <h3>Meereszonen</h3>
       <ul class="zone-table">${zones}</ul>
-      <p class="muted small">Endless Dive and the themed packs are unlimited practice — they never change your daily result. Your dives are stored only in this browser.</p>
-      <div class="card-actions row end"><button class="btn primary" data-act="close-modal">Let's dive</button></div>`, 'How to play');
+      <p class="muted small">Endlos-Tauchgang und Themenpakete sind unbegrenztes Training — dein Tagesergebnis ändern sie nie. Deine Tauchgänge werden nur in diesem Browser gespeichert.</p>
+      <div class="card-actions row end"><button class="btn primary" data-act="close-modal">Los geht's</button></div>`, 'So wird gespielt');
   }
 
   let toastTimer = 0;
