@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ d.name }} – {{ d.untertitel or d.kategorie }} in {{ d.adresse.ort }}</title>
+<meta name="description" content="{{ d.beschreibung | replace('\n', ' ') | truncate(155) }}">
+{# Demo: nicht in Suchmaschinen. Beim Livegang (Kunde hat zugesagt) diese Zeile entfernen. #}
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="{{ t.bg }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ d.name }}">
+<meta property="og:description" content="{{ d.untertitel or d.kategorie }} · {{ adresse }}">
+<link rel="icon" href="{{ favicon }}">
+<style>
+{{ fonts.css | safe }}
+:root {
+  color-scheme: {{ t.scheme }};
+  --bg: {{ t.bg }};
+  --surface: {{ t.surface }};
+  --text: {{ t.text }};
+  --muted: {{ t.muted }};
+  --line: {{ t.line }};
+  --line-strong: {{ t.line_strong }};
+  --accent: {{ t.accent }};
+  --accent-ink: {{ t.accent_ink }};
+  --accent-text: {{ t.accent_text }};
+  --accent-2: {{ t.accent2 }};
+  --font-body: {{ fonts.sans | safe }};
+  --font-display: {{ fonts.display | safe }};
+  --display-weight: {{ t.display_weight }};
+  --display-transform: {{ t.transform }};
+  --display-tracking: {{ t.tracking }};
+  --radius: {{ t.radius }};
+  --header-h: 60px;
+  --tools-h: 112px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 760px) { .wrap { padding: 0 32px; } }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
+  line-height: 1;
+}
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+/* Demo-Hinweis */
+.demo-bar {
+  background: var(--text);
+  color: var(--bg);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 8px 16px;
+}
+
+/* Kopfzeile */
+.top {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { text-decoration: none; font-size: 22px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-nav { display: flex; align-items: center; gap: 20px; }
+.top-nav a:not(.btn) { display: none; text-decoration: none; font-weight: 600; color: var(--muted); }
+.top-nav a:not(.btn):hover { color: var(--text); }
+@media (min-width: 760px) { .top-nav a:not(.btn) { display: inline; } }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 22px;
+  border-radius: 999px; border: 1.5px solid transparent;
+  font-weight: 700; font-size: 16px; text-decoration: none; white-space: nowrap;
+  transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--text)); }
+.btn-ghost { border-color: var(--line-strong); color: var(--text); }
+.btn-ghost:hover { border-color: var(--text); }
+.btn-sm { min-height: 38px; padding: 0 16px; font-size: 15px; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* Hero */
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding: 72px 0 64px;
+  background:
+    radial-gradient(60% 70% at 88% 12%, color-mix(in srgb, var(--accent-2) 30%, transparent), transparent 70%),
+    radial-gradient(55% 60% at 4% 100%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    var(--bg);
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  opacity: {{ '.10' if t.scheme == 'dark' else '.06' }}; mix-blend-mode: overlay;
+}
+{% if d.hero_bild %}
+.hero { background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.75)), url("{{ d.hero_bild | safe }}") center / cover; color: #fff; }
+.hero .lead, .hero .status { color: rgba(255,255,255,.88); }
+{% endif %}
+.hero-deko {
+  position: absolute; z-index: -1; right: -2vw; bottom: -4vw;
+  font-family: var(--font-display); font-weight: var(--display-weight); text-transform: var(--display-transform);
+  font-size: clamp(140px, 34vw, 420px); line-height: .8; letter-spacing: -.04em;
+  color: transparent; -webkit-text-stroke: 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  white-space: nowrap; pointer-events: none; user-select: none;
+}
+.hero h1 { font-size: clamp(52px, 13vw, 128px); margin: 0 0 18px; padding-top: .12em; max-width: 12ch; }
+.lead { font-size: clamp(18px, 2.6vw, 22px); line-height: 1.45; color: var(--muted); margin: 0 0 22px; max-width: 34ch; }
+.status {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 0 0 28px; padding: 8px 14px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  font-size: 14px; font-weight: 600;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+}
+.status .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 25%, transparent); }
+.status.is-open .dot { background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.25); }
+.status.is-closed .dot { background: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,.25); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li {
+  padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* Abschnitte */
+section { padding: 72px 0; }
+.section-head { margin-bottom: 24px; }
+.section-head h2, .about h2 { font-size: clamp(36px, 7vw, 64px); margin: 0; }
+.notice {
+  margin: 0 0 8px; padding: 12px 16px; max-width: 720px;
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: var(--radius); font-size: 14px; color: var(--muted);
+}
+.notice strong { color: var(--text); }
+
+/* Speisekarte */
+#karte { scroll-margin-top: var(--header-h); padding-bottom: 48px; border-top: 1px solid var(--line); }
+.menu-tools {
+  position: sticky; top: var(--header-h); z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.cat-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.cat-nav::-webkit-scrollbar { display: none; }
+.cat-nav a {
+  flex: none; padding: 8px 16px; border-radius: 999px;
+  border: 1px solid var(--line-strong); text-decoration: none;
+  font-weight: 600; font-size: 15px; white-space: nowrap;
+}
+.cat-nav a.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.tool-row { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+.tool-row::-webkit-scrollbar { display: none; }
+.search { flex: 1 0 180px; min-width: 0; }
+.search input {
+  width: 100%; height: 42px; padding: 0 14px;
+  border-radius: 999px; border: 1px solid var(--line-strong);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 16px;
+}
+.search input::placeholder { color: var(--muted); }
+.filter {
+  flex: none; height: 42px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: transparent; color: var(--text);
+  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.filter[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.menu-cat { padding-top: 40px; scroll-margin-top: calc(var(--header-h) + var(--tools-h)); }
+.menu-cat h3 { font-size: clamp(26px, 4.5vw, 36px); margin: 0 0 6px; }
+.cat-note { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+.items { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 12px; }
+@media (min-width: 760px) { .items { grid-template-columns: 1fr 1fr; } }
+.item {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.item-head { display: flex; align-items: baseline; gap: 10px; }
+.item-name { font-weight: 700; font-size: 17px; line-height: 1.3; }
+.leader { flex: 1; min-width: 16px; border-bottom: 2px dotted var(--line-strong); transform: translateY(-5px); }
+.price { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent-text); white-space: nowrap; }
+.item-desc { margin: 6px 0 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.variants { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--muted); }
+.variants b { color: var(--text); font-variant-numeric: tabular-nums; }
+.badges { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.badge {
+  font-size: 12px; font-weight: 700; letter-spacing: .02em;
+  padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted);
+}
+.badge-vegetarisch, .badge-vegan { color: #16a34a; border-color: rgba(22,163,74,.45); }
+.badge-scharf { color: #ef4444; border-color: rgba(239,68,68,.45); }
+.badge-beliebt, .badge-neu { color: var(--accent-text); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.empty { padding: 32px 0; color: var(--muted); }
+.fine { margin: 32px 0 0; font-size: 13px; color: var(--muted); }
+
+/* Über uns */
+.about { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.about-grid { display: grid; gap: 32px; }
+@media (min-width: 860px) { .about-grid { grid-template-columns: 1fr 1.2fr; gap: 64px; align-items: start; } }
+.about-text p { margin: 0 0 16px; font-size: 18px; line-height: 1.65; max-width: 60ch; }
+.services { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.services li { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 14px; font-weight: 600; }
+
+/* Info */
+#info { scroll-margin-top: var(--header-h); }
+.info-grid { display: grid; gap: 16px; }
+@media (min-width: 860px) { .info-grid { grid-template-columns: repeat(3, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.card h3 { margin: 0 0 14px; font-size: 22px; }
+.card p { margin: 0 0 12px; }
+.hours { width: 100%; border-collapse: collapse; font-size: 15px; }
+.hours td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.hours td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.hours tr:last-child td { border-bottom: 0; }
+.hours tr.today td { color: var(--accent-text); font-weight: 700; }
+.muted { color: var(--muted); }
+.contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.contact-list a { font-weight: 600; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+
+/* Fußzeile */
+.foot { border-top: 1px solid var(--line); padding: 40px 0 32px; }
+.foot-inner { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: flex-start; }
+.foot p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.foot nav { display: flex; gap: 20px; font-size: 14px; }
+.foot nav a { color: var(--muted); }
+.credit { margin-top: 24px !important; font-size: 12px !important; }
+
+/* Mobile Aktionsleiste */
+.action-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: grid; grid-template-columns: repeat({{ 3 if d.telefon else 2 }}, 1fr); gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+.action-bar .btn { min-height: 46px; padding: 0 10px; font-size: 15px; }
+body { padding-bottom: 76px; }
+@media (min-width: 760px) { .action-bar { display: none; } body { padding-bottom: 0; } }
+
+/* ---------- Entwurfs-Hinweis ---------- */
+.demo-bar a { color: inherit; font-weight: 700; text-underline-offset: 3px; }
+
+/* ---------- Layout: split (zweispaltig mit Karten-Vorschau) ---------- */
+.preview { display: none; }
+.layout-split .hero-deko { display: none; }
+.layout-split .preview {
+  display: block; margin-top: 40px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: calc(var(--radius) + 6px);
+  padding: 24px; box-shadow: 0 24px 60px -30px rgba(0,0,0,.45);
+}
+.preview h2 { font-size: 26px; margin: 0 0 4px; }
+.preview .eyebrow { margin-bottom: 6px; }
+.preview ul { list-style: none; margin: 16px 0 20px; padding: 0; }
+.preview li { display: flex; align-items: baseline; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.preview li:last-child { border-bottom: 0; }
+.preview li span:first-child { font-weight: 700; }
+.preview li small { display: block; color: var(--muted); font-size: 14px; font-weight: 400; }
+@media (min-width: 900px) {
+  .layout-split .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+  .layout-split .preview { margin-top: 0; }
+  .layout-split .hero h1 { font-size: clamp(52px, 7vw, 96px); }
+}
+
+/* ---------- Layout: karte (Speisekarte zuerst, QR-Code-tauglich) ---------- */
+.layout-karte .hero { padding: 28px 0 24px; }
+.layout-karte .hero-deko, .layout-karte .chips, .layout-karte .hero .lead { display: none; }
+.layout-karte .hero h1 { font-size: clamp(40px, 9vw, 72px); margin-bottom: 12px; }
+.layout-karte .status { margin-bottom: 16px; }
+.layout-karte .cta-row { margin-bottom: 0; }
+.layout-karte .cta-row .btn-primary { display: none; }
+.layout-karte .cta-row .btn { min-height: 40px; font-size: 15px; padding: 0 16px; }
+.layout-karte #karte { padding-top: 32px; }
+.layout-karte #karte .section-head h2 { font-size: clamp(28px, 5vw, 40px); }
+
+/* ---------- Layout: mitte (elegant zentriert, klassische Karte) ---------- */
+.layout-mitte .hero { text-align: center; padding: 96px 0 88px; }
+.layout-mitte .hero-deko { display: none; }
+.layout-mitte .hero h1 { margin-left: auto; margin-right: auto; font-size: clamp(48px, 11vw, 112px); }
+.layout-mitte .hero .lead { margin-left: auto; margin-right: auto; }
+.layout-mitte .cta-row, .layout-mitte .chips { justify-content: center; }
+.layout-mitte .ornament { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 22px; color: var(--accent-text); }
+.layout-mitte .ornament::before, .layout-mitte .ornament::after { content: ""; width: 56px; height: 1px; background: currentColor; opacity: .6; }
+.ornament { display: none; }
+.layout-mitte .section-head { text-align: center; }
+.layout-mitte .notice { margin-left: auto; margin-right: auto; text-align: center; }
+.layout-mitte .cat-nav { justify-content: safe center; }
+.layout-mitte .menu-cat h3 { text-align: center; }
+.layout-mitte .cat-note { text-align: center; }
+.layout-mitte .items { gap: 0 48px; }
+.layout-mitte .item { background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 16px 0; }
+.layout-mitte .about-grid { text-align: center; grid-template-columns: 1fr; justify-items: center; }
+.layout-mitte .about-text p { margin-left: auto; margin-right: auto; }
+.layout-mitte .services { justify-content: center; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+<script type="application/ld+json">{{ jsonld | tojson }}</script>
+</head>
+<body class="layout-{{ layout }}">
+
+<div class="demo-bar">
+  <strong>Entwurf{% if entwurf.anzahl > 1 %} {{ entwurf.nummer }} von {{ entwurf.anzahl }}{% endif %}</strong> · Unverbindliche Demo-Website für {{ d.name }} · nicht öffentlich gelistet{% if agentur.name %} · erstellt von {{ agentur.name }}{% endif %}{% if entwurf.uebersicht %} · <a href="{{ entwurf.uebersicht }}">Alle Entwürfe vergleichen</a>{% endif %}
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <a href="#start" class="brand display">{{ d.name }}</a>
+    <nav class="top-nav" aria-label="Hauptnavigation">
+      <a href="#ueber">Über uns</a>
+      <a href="#info">Öffnungszeiten &amp; Anfahrt</a>
+      <a href="#karte" class="btn btn-primary btn-sm">Speisekarte</a>
+    </nav>
+  </div>
+</header>
+
+<main id="start">
+
+<section class="hero">
+  <div class="hero-deko" aria-hidden="true">{{ d.deko_text or d.name }}</div>
+  <div class="wrap hero-grid">
+    <div>
+    <p class="ornament" aria-hidden="true">✦</p>
+    <p class="eyebrow">{{ d.kategorie }} · {{ d.stadtteil or d.adresse.ort }}</p>
+    <h1 class="display">{{ d.name }}</h1>
+    {% if d.untertitel %}<p class="lead">{{ d.untertitel }}</p>{% endif %}
+    <p class="status" data-status>
+      <span class="dot" aria-hidden="true"></span>
+      <span data-status-text>{{ d.status_hinweis or "Öffnungszeiten folgen in Kürze" }}</span>
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#karte">Speisekarte ansehen</a>
+      {% if d.telefon %}<a class="btn btn-ghost" href="{{ tel_href }}">Anrufen</a>{% endif %}
+      <a class="btn btn-ghost" href="{{ maps_url }}" target="_blank" rel="noopener">Route planen</a>
+    </div>
+    {% if d.highlights %}
+    <ul class="chips">
+      {% for h in d.highlights %}<li>{{ h }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    </div>
+    {% if layout == "split" %}
+    <aside class="preview" aria-label="Aus der Speisekarte">
+      <p class="eyebrow">Aus der Karte</p>
+      <h2 class="display">Lieblinge</h2>
+      <ul>
+        {% for e in vorschau %}
+        <li>
+          <span>{{ e.name }}{% if e.beschreibung %}<small>{{ e.beschreibung | truncate(60) }}</small>{% endif %}</span>
+          <span class="leader" aria-hidden="true"></span>
+          <span class="price">{{ e.preis or e.varianten[0].preis }} €</span>
+        </li>
+        {% endfor %}
+      </ul>
+      <a class="btn btn-primary" href="#karte" style="width:100%">Ganze Speisekarte</a>
+    </aside>
+    {% endif %}
+  </div>
+</section>
+
+<section id="karte" aria-labelledby="karte-titel">
+  <div class="wrap section-head">
+    <p class="eyebrow">Digitale Speisekarte</p>
+    <h2 id="karte-titel" class="display">Speisekarte</h2>
+  </div>
+  {% if d.speisekarte_quelle != "echt" %}
+  <div class="wrap">
+    <p class="notice">
+      {% if d.speisekarte_hinweis %}{{ d.speisekarte_hinweis }}
+      {% elif d.speisekarte_quelle == "beispiel" %}<strong>Beispiel-Speisekarte:</strong> Gerichte und Preise sind Platzhalter und werden durch die echte Karte ersetzt.
+      {% else %}<strong>Hinweis:</strong> Speisekarte teilweise aus öffentlichen Quellen übernommen, Preise ohne Gewähr.
+      {% endif %}
+    </p>
+  </div>
+  {% endif %}
+
+  <div class="menu-tools">
+    <div class="wrap">
+      <nav class="cat-nav" aria-label="Kategorien" data-cat-nav>
+        {% for kat in d.speisekarte %}<a href="#kat-{{ loop.index }}" data-cat-link>{{ kat.kategorie }}</a>{% endfor %}
+      </nav>
+      <div class="tool-row">
+        <label class="search">
+          <span class="sr-only">Gericht suchen</span>
+          <input type="search" placeholder="Gericht suchen …" autocomplete="off" data-search>
+        </label>
+        {% for f in filter_tags %}
+        <button type="button" class="filter" aria-pressed="false" data-filter="{{ f.key }}">{{ f.label }}</button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    {% for kat in d.speisekarte %}
+    <div class="menu-cat" id="kat-{{ loop.index }}" data-cat>
+      <h3 class="display">{{ kat.kategorie }}</h3>
+      {% if kat.hinweis %}<p class="cat-note">{{ kat.hinweis }}</p>{% endif %}
+      <ul class="items">
+        {% for e in kat.eintraege %}
+        <li class="item" data-item data-tags="{{ (e.tags or []) | join(' ') }}" data-text="{{ (e.name ~ ' ' ~ (e.beschreibung or '')) | lower }}">
+          <div class="item-head">
+            <span class="item-name">{{ e.name }}</span>
+            {% if e.preis %}<span class="leader" aria-hidden="true"></span><span class="price">{{ e.preis }} €</span>{% endif %}
+          </div>
+          {% if e.beschreibung %}<p class="item-desc">{{ e.beschreibung }}</p>{% endif %}
+          {% if e.varianten %}
+          <p class="variants">{% for v in e.varianten %}<span>{{ v.name }} <b>{{ v.preis }} €</b></span>{% endfor %}</p>
+          {% endif %}
+          {% if e.tags %}
+          <p class="badges">{% for tag in e.tags %}<span class="badge badge-{{ tag }}">{{ tag_labels.get(tag, tag | capitalize) }}</span>{% endfor %}</p>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+    <p class="empty" data-empty hidden>Kein Gericht gefunden – andere Suche probieren?</p>
+    <p class="fine">Informationen zu Allergenen und Zusatzstoffen gibt es auf Nachfrage beim Personal.</p>
+  </div>
+</section>
+
+<section id="ueber" class="about" aria-labelledby="ueber-titel">
+  <div class="wrap about-grid">
+    <div>
+      <p class="eyebrow">Über uns</p>
+      <h2 id="ueber-titel" class="display">{{ d.ueber_titel or "Über uns" }}</h2>
+    </div>
+    <div class="about-text">
+      {% for absatz in d.beschreibung.split('\n\n') %}<p>{{ absatz }}</p>{% endfor %}
+      {% if d.services %}
+      <ul class="services">{% for s in d.services %}<li>{{ s }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section id="info" aria-labelledby="info-titel">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Besuch</p>
+      <h2 id="info-titel" class="display">Öffnungszeiten &amp; Anfahrt</h2>
+    </div>
+    <div class="info-grid">
+      <div class="card">
+        <h3>Öffnungszeiten</h3>
+        {% if tabelle %}
+        <table class="hours">
+          {% for tag, zeiten in tabelle %}
+          <tr data-day="{{ loop.index0 }}"><td>{{ tag }}</td><td>{{ zeiten | join(', ') if zeiten else 'Ruhetag' }}</td></tr>
+          {% endfor %}
+        </table>
+        {% if not d.oeffnungszeiten_bestaetigt %}<p class="muted" style="margin-top:12px;font-size:13px">Angaben ohne Gewähr.</p>{% endif %}
+        {% else %}
+        <p class="muted">{{ d.status_hinweis or "Öffnungszeiten folgen in Kürze." }}</p>
+        {% endif %}
+      </div>
+      <div class="card">
+        <h3>Adresse</h3>
+        <p>{{ d.name }}<br>{{ d.adresse.strasse }}<br>{{ d.adresse.plz }} {{ d.adresse.ort }}</p>
+        {% if d.anfahrt %}<p class="muted">{{ d.anfahrt }}</p>{% endif %}
+        <a class="btn btn-ghost btn-sm" href="{{ maps_url }}" target="_blank" rel="noopener">In Google Maps öffnen</a>
+      </div>
+      <div class="card">
+        <h3>Kontakt</h3>
+        <ul class="contact-list">
+          {% if d.telefon %}<li><span class="muted">Telefon</span><br><a href="{{ tel_href }}">{{ d.telefon }}</a></li>{% endif %}
+          {% if d.email %}<li><span class="muted">E-Mail</span><br><a href="mailto:{{ d.email }}">{{ d.email }}</a></li>{% endif %}
+          {% if d.instagram %}<li><span class="muted">Instagram</span><br><a href="https://www.instagram.com/{{ d.instagram | replace('@', '') }}/" target="_blank" rel="noopener">@{{ d.instagram | replace('@', '') }}</a></li>{% endif %}
+          {% if not (d.telefon or d.email or d.instagram) %}<li class="muted">Kontaktdaten folgen.</li>{% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div>
+      <strong class="display" style="font-size:20px">{{ d.name }}</strong>
+      <p>{{ adresse }}</p>
+    </div>
+    <nav aria-label="Rechtliches"><a href="#">Impressum</a><a href="#">Datenschutz</a></nav>
+  </div>
+  <p class="wrap credit">© {{ jahr }} {{ d.name }} · Demo-Entwurf{% if agentur.name %} von {{ agentur.name }}{% if agentur.telefon %} · {{ agentur.telefon }}{% endif %}{% if agentur.email %} · {{ agentur.email }}{% endif %}{% endif %} · Inhalte teilweise Platzhalter</p>
+</footer>
+
+<nav class="action-bar" aria-label="Schnellzugriff">
+  <a class="btn btn-primary" href="#karte">Speisekarte</a>
+  {% if d.telefon %}<a class="btn btn-ghost" href="{{ tel_href }}">Anrufen</a>{% endif %}
+  <a class="btn btn-ghost" href="{{ maps_url }}" target="_blank" rel="noopener">Route</a>
+</nav>
+
+<script id="oeffnungszeiten" type="application/json">{{ (d.oeffnungszeiten or None) | tojson }}</script>
+<script>
+(function () {
+  // "Jetzt geöffnet"-Anzeige aus den Öffnungszeiten (Zeiten über Mitternacht werden unterstützt).
+  var H = JSON.parse(document.getElementById('oeffnungszeiten').textContent);
+  var KEYS = ['mo', 'di', 'mi', 'do', 'fr', 'sa', 'so'];
+  var NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  var now = new Date(), day = (now.getDay() + 6) % 7, m = now.getHours() * 60 + now.getMinutes();
+  var row = document.querySelector('[data-day="' + day + '"]');
+  if (row) row.classList.add('today');
+  if (!H) return;
+  function min(t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; }
+  function fmt(x) { x = x % 1440; var h = Math.floor(x / 60), mm = x % 60; return (h < 10 ? '0' : '') + h + ':' + (mm < 10 ? '0' : '') + mm; }
+  function ranges(i) {
+    return (H[KEYS[i]] || []).map(function (r) {
+      var p = r.split('-'), s = min(p[0]), e = min(p[1]);
+      if (e <= s) e += 1440;
+      return [s, e];
+    });
+  }
+  var el = document.querySelector('[data-status]'), txt = document.querySelector('[data-status-text]');
+  var bis = null;
+  ranges(day).forEach(function (r) { if (m >= r[0] && m < r[1]) bis = r[1]; });
+  ranges((day + 6) % 7).forEach(function (r) { if (r[1] > 1440 && m < r[1] - 1440) bis = r[1]; });
+  if (bis !== null) { el.classList.add('is-open'); txt.textContent = 'Jetzt geöffnet · bis ' + fmt(bis) + ' Uhr'; return; }
+  el.classList.add('is-closed');
+  for (var k = 0; k < 7; k++) {
+    var d = (day + k) % 7;
+    var rs = ranges(d).filter(function (r) { return k > 0 || r[0] > m; });
+    if (rs.length) {
+      var wann = k === 0 ? 'heute' : k === 1 ? 'morgen' : 'am ' + NAMES[d];
+      txt.textContent = 'Geschlossen · öffnet ' + wann + ' um ' + fmt(rs[0][0]) + ' Uhr';
+      return;
+    }
+  }
+  txt.textContent = 'Derzeit geschlossen';
+})();
+
+(function () {
+  // Suche, Filter und mitlaufende Kategorie-Leiste der Speisekarte.
+  var search = document.querySelector('[data-search]');
+  var filters = [].slice.call(document.querySelectorAll('[data-filter]'));
+  var items = [].slice.call(document.querySelectorAll('[data-item]'));
+  var cats = [].slice.call(document.querySelectorAll('[data-cat]'));
+  var empty = document.querySelector('[data-empty]');
+  function apply() {
+    var q = search.value.trim().toLowerCase();
+    var aktiv = filters.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })
+                       .map(function (b) { return b.getAttribute('data-filter'); });
+    items.forEach(function (it) {
+      var tags = it.getAttribute('data-tags').split(' ');
+      var passt = aktiv.every(function (f) {
+        return f === 'vegetarisch' ? tags.indexOf('vegetarisch') > -1 || tags.indexOf('vegan') > -1 : tags.indexOf(f) > -1;
+      });
+      it.hidden = !(passt && (!q || it.getAttribute('data-text').indexOf(q) > -1));
+    });
+    var irgendwas = false;
+    cats.forEach(function (c) {
+      var sichtbar = !!c.querySelector('[data-item]:not([hidden])');
+      c.hidden = !sichtbar;
+      irgendwas = irgendwas || sichtbar;
+    });
+    empty.hidden = irgendwas;
+  }
+  search.addEventListener('input', apply);
+  filters.forEach(function (b) {
+    b.addEventListener('click', function () {
+      b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+      apply();
+    });
+  });
+
+  var nav = document.querySelector('[data-cat-nav]');
+  var links = [].slice.call(document.querySelectorAll('[data-cat-link]'));
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      links.forEach(function (l) {
+        var an = l.getAttribute('href') === '#' + en.target.id;
+        l.classList.toggle('active', an);
+        if (an) nav.scrollTo({ left: l.offsetLeft - nav.clientWidth / 2 + l.clientWidth / 2, behavior: 'smooth' });
+      });
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  cats.forEach(function (c) { io.observe(c); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Netlify-Konfiguration: veröffentlicht nur den Ordner demos/.
+# Laden-Daten, Lead-Liste und Briefings (daten/) bleiben intern.
+[build]
+  publish = "demos"
+  command = ""
+
+# Demos sollen nicht bei Google auftauchen.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

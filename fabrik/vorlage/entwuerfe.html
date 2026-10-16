@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design-Entwürfe – {{ d.name }}</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+{{ css | safe }}
+:root {
+  --bg: #f3f1ec;
+  --surface: #ffffff;
+  --text: #17171a;
+  --muted: #64625d;
+  --line: #e2ded6;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111113; --surface: #1a1a1d; --text: #f2f0eb; --muted: #a3a09a; --line: #2c2c30; }
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 760px) { .wrap { padding: 0 32px; } }
+header.wrap { padding-top: 56px; padding-bottom: 32px; }
+.eyebrow { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0 0 14px; font-size: clamp(32px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -.03em; max-width: 18ch; }
+.lead { margin: 0; max-width: 60ch; font-size: 18px; color: var(--muted); }
+.grid { display: grid; gap: 24px; padding-bottom: 56px; }
+@media (min-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .grid { grid-template-columns: repeat({{ karten | length if karten | length < 4 else 4 }}, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; }
+.phone { width: 300px; max-width: 100%; height: 620px; margin: 0 auto 24px; padding: 10px; border-radius: 42px; background: #0b0b0c; box-shadow: 0 30px 60px -30px rgba(0,0,0,.5); }
+.screen { width: 280px; height: 600px; overflow: hidden; border-radius: 32px; background: #fff; }
+.screen iframe { width: 390px; height: 836px; border: 0; transform: scale(.718); transform-origin: 0 0; display: block; }
+.label { display: inline-flex; gap: 8px; align-items: center; margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.fav { padding: 2px 8px; border-radius: 999px; background: var(--text); color: var(--bg); letter-spacing: .04em; }
+.card h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.2; letter-spacing: -.02em; }
+.card p.idee { margin: 0 0 16px; color: var(--muted); }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: auto 0 18px; font-size: 14px; color: var(--muted); }
+.swatches { display: inline-flex; }
+.swatches span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -6px; box-shadow: 0 0 0 1px var(--line); }
+.swatches span:first-child { margin-left: 0; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--text); color: var(--bg); font-weight: 700; text-decoration: none; }
+footer.wrap { border-top: 1px solid var(--line); padding-top: 24px; padding-bottom: 40px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <p class="eyebrow">Design-Entwürfe{% if agentur.name %} · {{ agentur.name }}{% endif %}</p>
+  <h1>{{ karten | length }} Ideen für die Website von {{ d.name }}</h1>
+  <p class="lead">Unverbindliche Vorschläge, alle mit digitaler Speisekarte und fürs Handy gemacht. Einfach durchscrollen und vergleichen – welcher Stil passt am besten?</p>
+</header>
+<main class="wrap grid">
+  {% for k in karten %}
+  <article class="card">
+    <div class="phone"><div class="screen"><iframe src="{{ k.link }}" title="Entwurf {{ k.nummer }}: {{ k.titel }}" loading="lazy"></iframe></div></div>
+    <p class="label">Entwurf {{ k.nummer }}{% if k.nummer == 1 %} <span class="fav">Unser Favorit</span>{% endif %}</p>
+    <h2>{{ k.titel }}</h2>
+    <p class="idee">{{ k.idee }}</p>
+    <div class="meta">
+      <span class="swatches" aria-hidden="true"><span style="background:{{ k.theme.bg }}"></span><span style="background:{{ k.theme.accent }}"></span><span style="background:{{ k.theme.accent2 }}"></span></span>
+      <span>{{ k.theme.name }} · {{ k.layout_text }}</span>
+    </div>
+    <a class="btn" href="{{ k.link }}">Entwurf {{ k.nummer }} öffnen</a>
+  </article>
+  {% endfor %}
+</main>
+<footer class="wrap">
+  Entwürfe für {{ d.name }}, {{ adresse }} · nicht öffentlich gelistet · Inhalte teilweise Platzhalter{% if agentur.name %} · {{ agentur.name }}{% if agentur.telefon %} · {{ agentur.telefon }}{% endif %}{% if agentur.email %} · {{ agentur.email }}{% endif %}{% endif %}
+</footer>
+</body>
+</html>
