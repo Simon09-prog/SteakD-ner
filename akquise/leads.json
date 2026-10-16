@@ -1,0 +1,39 @@
+{
+  "leads": [
+    {
+      "slug": "steak-doener-osnabrueck",
+      "name": "Steak Döner",
+      "adresse": "Bremer Str. 56, 49084 Osnabrück",
+      "kategorie": "Döner",
+      "status": "kunde",
+      "datum": "2026-10-16",
+      "notiz": "Bestehender Kunde (steakdoener.netlify.app)"
+    },
+    {
+      "slug": "phi-long",
+      "name": "Phi Long",
+      "adresse": "Bremer Straße 77, 49086 Osnabrück",
+      "status": "ausgeschlossen",
+      "datum": "2026-10-16",
+      "grund": "Hat eigene Website (phi-long.de)"
+    },
+    {
+      "slug": "grillbar-imbiss",
+      "name": "Grillbar Imbiss",
+      "adresse": "Hannoversche Straße 111, 49084 Osnabrück",
+      "status": "ausgeschlossen",
+      "datum": "2026-10-16",
+      "grund": "Hat eigene Website (grillbar-imbiss.de)"
+    },
+    {
+      "slug": "030-doener-osnabrueck",
+      "name": "030 Döner",
+      "adresse": "Neumarkt, 49074 Osnabrück",
+      "kategorie": "Döner & Hähnchen",
+      "status": "demo_erstellt",
+      "datum": "2026-10-16",
+      "demo": "demos/030-doener-osnabrueck/index.html",
+      "url": ""
+    }
+  ]
+}

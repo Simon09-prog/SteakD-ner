@@ -1,0 +1,26 @@
+{
+  "stadt": "Osnabrück",
+  "plz": ["49074", "49076", "49078", "49080", "49082", "49084", "49086", "49088", "49090"],
+  "agentur": {
+    "name": "",
+    "telefon": "",
+    "email": "",
+    "website": ""
+  },
+  "demo_basis_url": "",
+  "branchen": [
+    "Döner / Imbiss",
+    "Pizzeria",
+    "Restaurant (deutsch, italienisch, griechisch, türkisch, asiatisch, ...)",
+    "Café / Bäckerei-Café",
+    "Eiscafé",
+    "Burger / Streetfood",
+    "Bar / Kneipe / Shisha-Bar"
+  ],
+  "ketten_ausschliessen": [
+    "McDonald's", "Burger King", "KFC", "Subway", "Pizza Hut", "Domino's", "Smiley's",
+    "Vapiano", "L'Osteria", "Hans im Glück", "Peter Pane", "Block House", "Nordsee",
+    "Starbucks", "Café Extrablatt", "Coffee Fellows", "dean&david", "Backwerk",
+    "Kamps", "Ditsch", "Five Guys", "Burgerme", "Losteria", "Mongo's", "Alex"
+  ]
+}

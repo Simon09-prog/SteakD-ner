@@ -1,0 +1,11 @@
+# Netlify-Konfiguration für die Demo-Websites (nur auf Branch "akquise").
+# Veröffentlicht wird ausschließlich der Ordner demos/ – Lead-Liste und Briefings bleiben intern.
+[build]
+  publish = "demos"
+  command = ""
+
+# Demos sollen nicht bei Google auftauchen.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

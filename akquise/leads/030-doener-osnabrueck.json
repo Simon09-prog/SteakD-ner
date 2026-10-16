@@ -1,0 +1,98 @@
+{
+  "slug": "030-doener-osnabrueck",
+  "name": "030 Döner",
+  "untertitel": "Berliner Döner am Neumarkt – drei Brotsorten, Berliner Saucen und halbe Hähnchen mit eigener Marinade.",
+  "kategorie": "Döner & Hähnchen",
+  "stadtteil": "Osnabrück · Neumarkt",
+  "theme": "street",
+  "deko_text": "030",
+  "adresse": {
+    "strasse": "Neumarkt",
+    "plz": "49074",
+    "ort": "Osnabrück"
+  },
+  "anfahrt": "Direkt am Neumarkt, in den ehemaligen Räumen von Bony Bo.",
+  "telefon": null,
+  "email": null,
+  "instagram": null,
+  "status_hinweis": "Neueröffnung im Oktober 2026",
+  "oeffnungszeiten": null,
+  "oeffnungszeiten_bestaetigt": false,
+  "highlights": [
+    "3 Brotsorten zur Wahl",
+    "Berliner Saucen",
+    "Halbe Hähnchen mit eigener Marinade",
+    "Außenbereich in Planung"
+  ],
+  "ueber_titel": "Ein Stück Berlin am Neumarkt",
+  "beschreibung": "030 ist die Vorwahl von Berlin – der Stadt, in der der Döner, wie wir ihn kennen, groß geworden ist. Am Neumarkt bringen wir die Berliner Döner-Kultur nach Osnabrück: mit drei Brotsorten zur Wahl, speziellen Berliner Saucen und halben Hähnchen mit eigener Marinade.\n\nDie Wände tragen Graffiti, und ein Außenbereich ist in Planung. Für die schnelle Mittagspause, den Abend in der Stadt oder zum Mitnehmen.",
+  "services": ["Zum Mitnehmen", "Vor Ort essen", "Außenbereich (bald)"],
+  "speisekarte_quelle": "beispiel",
+  "speisekarte": [
+    {
+      "kategorie": "Döner",
+      "hinweis": "Jeder Döner in einer von drei Brotsorten – mit Salat, Rotkohl, Zwiebeln, Tomaten und Berliner Sauce nach Wahl.",
+      "eintraege": [
+        { "name": "Döner im Brot", "beschreibung": "Der Berliner Klassiker mit frischem Salat und zwei Saucen.", "preis": "7,90", "tags": ["beliebt"] },
+        { "name": "Dürüm", "beschreibung": "Im dünnen Yufka gerollt, gefüllt mit Fleisch, Salat und Sauce.", "preis": "8,90" },
+        { "name": "Döner mit Hirtenkäse", "beschreibung": "Mit extra Schafskäse und gegrilltem Gemüse.", "preis": "8,90" },
+        { "name": "Gemüse-Döner", "beschreibung": "Gegrilltes Gemüse, Feta, Salat und Kräutersauce – der Berliner Veggie-Klassiker.", "preis": "7,50", "tags": ["vegetarisch"] },
+        { "name": "Halloumi-Döner", "beschreibung": "Gegrillter Halloumi mit Salat und Kräutersauce.", "preis": "8,50", "tags": ["vegetarisch"] }
+      ]
+    },
+    {
+      "kategorie": "Teller & Boxen",
+      "eintraege": [
+        { "name": "Döner-Box", "beschreibung": "Pommes, Dönerfleisch und Sauce in der Box.", "preis": "7,50" },
+        { "name": "Döner-Teller", "beschreibung": "Mit Reis oder Pommes, Salat und Sauce.", "preis": "13,90" },
+        { "name": "Salat-Teller mit Fleisch", "beschreibung": "Bunter Salat mit Dönerfleisch und Sauce.", "preis": "11,90" }
+      ]
+    },
+    {
+      "kategorie": "Hähnchen",
+      "hinweis": "Halbe Hähnchen mit eigener Marinade.",
+      "eintraege": [
+        { "name": "Halbes Hähnchen", "beschreibung": "Knusprig gegrillt, mit unserer Marinade.", "preis": "8,90", "tags": ["beliebt"] },
+        { "name": "Halbes Hähnchen mit Pommes", "beschreibung": "Dazu Pommes und eine Sauce nach Wahl.", "preis": "11,50" },
+        { "name": "Hähnchen-Teller", "beschreibung": "Halbes Hähnchen mit Reis, Salat und Sauce.", "preis": "13,50" }
+      ]
+    },
+    {
+      "kategorie": "Beilagen & Saucen",
+      "eintraege": [
+        { "name": "Pommes", "preis": "3,50", "tags": ["vegan"] },
+        { "name": "Beilagensalat", "preis": "3,90", "tags": ["vegan"] },
+        { "name": "Extra Sauce", "beschreibung": "Kräuter oder Knoblauch.", "preis": "0,50", "tags": ["vegetarisch"] },
+        { "name": "Scharfe Sauce", "beschreibung": "Für alle, die es feurig mögen.", "preis": "0,50", "tags": ["vegan", "scharf"] }
+      ]
+    },
+    {
+      "kategorie": "Getränke",
+      "eintraege": [
+        { "name": "Ayran", "preis": "2,00" },
+        { "name": "Softdrinks 0,33 l", "beschreibung": "Cola, Fanta, Sprite.", "preis": "2,50" },
+        { "name": "Wasser 0,5 l", "beschreibung": "Still oder sprudelnd.", "preis": "2,00" }
+      ]
+    }
+  ],
+  "akquise": {
+    "grund": "Neueröffnung im Oktober 2026 direkt am Neumarkt (ehemals Bony Bo, neben Beykebap). Im Netz gibt es bisher nur Eröffnungsmeldungen: keine eigene Website, keine Online-Speisekarte. Die Betreiber planen laut Bericht weitere Standorte in Osnabrück und ein Franchise-Modell. Sie brauchen also früh einen Markenauftritt, der mit mehreren Standorten wächst.",
+    "quellen": [
+      "https://www.neueroeffnung.info/osnabrueck/030-doener-restaurant (Eröffnung Oktober 2026, Konzept, Expansionspläne)",
+      "https://thenewinsider.de/ (Bericht: neuer Laden neben Beykebap am Neumarkt)"
+    ],
+    "fehlende_infos": [
+      "Hausnummer am Neumarkt",
+      "Telefonnummer",
+      "Öffnungszeiten",
+      "Echte Speisekarte mit Preisen (aktuell Beispielkarte)",
+      "Logo, Fotos vom Laden und Instagram-Account"
+    ],
+    "gespraechseinstieg": "Glückwunsch zur Eröffnung! Wer am Neumarkt vorbeiläuft und euch googelt, findet gerade noch nichts. Wir haben schon mal einen Entwurf gebaut, wie 030 online aussehen könnte, mit digitaler Speisekarte, die ihr selbst pflegen könnt. Den QR-Code dazu kann man ans Fenster oder auf die Tische kleben. Wenn ihr weitere Standorte aufmacht, bekommt jeder Standort einfach eine eigene Seite unter derselben Marke.",
+    "angebot": [
+      "Website + digitale Speisekarte (selbst pflegbar), QR-Code für Fenster/Tische",
+      "Google-Unternehmensprofil einrichten (Neueröffnung → wichtig für 'Döner in der Nähe')",
+      "Später: Standort-Seiten für weitere Filialen / Franchise"
+    ]
+  }
+}
