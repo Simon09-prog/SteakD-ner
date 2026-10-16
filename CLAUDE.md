@@ -95,7 +95,7 @@ Passt keine Farbwelt wirklich (z. B. Markenfarbe des Ladens bekannt), neue Farbw
 1. `python3 fabrik/fabrik.py bauen <slug>` – Fehler beheben, bis es durchläuft.
 2. `node fabrik/screenshot.mjs <slug>` – Screenshots ansehen (`screenshots/<slug>-<n>-mobil.png`, `-desktop.png`,
    `<slug>-entwuerfe.png`): Name korrekt? Nichts abgeschnitten oder überlappend? Texte sinnvoll? Bei Bedarf korrigieren.
-3. Commit (`Website: <Name> (<slug>)`) und `git push` auf `main`.
+3. Commit (`Website: <Name> (<slug>)`) und `git push` (aktueller Branch).
 4. Mit `SendUserFile` schicken: `screenshots/<slug>-entwuerfe.png`, `screenshots/<slug>-1-mobil.png` und
    `demos/<slug>/index.html`. Dazu kurz: Name, die drei Design-Ideen in je einem Satz, Live-Link
    (`demo_basis_url` + `<slug>/` und `<slug>/entwuerfe/`, falls gesetzt), was echt und was Platzhalter ist, Gesprächseinstieg.
