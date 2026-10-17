@@ -16,7 +16,7 @@ npx serve krillion
 
 - **Tagestauchgang**: 7 Fragen pro Tag, für alle gleich (deterministisch nach Datum ausgewählt). Der Fortschritt wird gespeichert. Wer die Seite mitten in einer Antwort neu lädt, bekommt diese Frage als verpasst gewertet.
 - **Seltenheitsstufen**: Plankton (10), Neunmalklug (15), Mitschwimmer (30), Rarität (60), Tiefgang (85), Eins zu einer Million (100).
-- **Endlos-Tauchgang** und **Themenpakete** (Wörter & Sprache, Kino & Film, Sport, Geografie; Musik folgt): unbegrenztes Üben, ohne Einfluss auf das Tagesergebnis.
+- **Endlos-Tauchgang** und **Themenpakete** (Wörter & Sprache, Kino & Film, Sport, Geografie; Musik folgt): unbegrenztes Üben, ohne Einfluss auf das Tagesergebnis. Fragen wiederholen sich nicht: Es kommen immer die am längsten nicht gespielten zuerst (auch Fragen aus Tagestauchgängen zählen mit), erst danach geht die Runde von vorn los.
 - **Ergebnis-Screen** mit Tauchprofil, Emoji-Zeile zum Teilen und dem vollständigen Antwortbogen jeder Frage.
 - **Tauchlogbuch** mit Statistiken und Streaks (im `localStorage` des Browsers).
 - Die Antwortprüfung ignoriert Groß-/Kleinschreibung, Umlaute/Akzente, Artikel (der/die/das, the …) und Satzzeichen, versteht zusammengesetzte Wörter wie „Namibwüste" oder „Erzgebirge" erkennt „ae/oe/ue" statt Umlaut sowie deutsche Pluralformen. Ausnahme: Fragen, bei denen es auf die exakte Schreibweise ankommt (z. B. Palindrome).

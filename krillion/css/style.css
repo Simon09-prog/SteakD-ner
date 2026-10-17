@@ -314,6 +314,8 @@ body[data-screen='is-home'] .brand { visibility: hidden; }
 .endless { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; }
 .endless h2 { font-size: 1.35rem; margin-bottom: 4px; }
 .endless p { margin: 0; color: var(--ink-soft); max-width: 46ch; }
+.endless p.endless-count { margin-top: 10px; font-size: 0.9rem; color: var(--glow); }
+.endless-count strong { color: var(--ink); }
 
 .packs { margin-top: 34px; }
 .packs h2 { font-size: 1.35rem; }

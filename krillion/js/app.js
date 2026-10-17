@@ -462,15 +462,36 @@
     }
     if (mode === 'pack') {
       const pack = PACK_BY_ID.get(opts.packId);
-      const pool = PROMPTS.filter((p) => p.pack === opts.packId).map((p) => p.id);
-      return { mode, packId: pack.id, title: pack.name, ids: shuffle(pool).slice(0, ROUNDS), results: [], done: false };
+      return { mode, packId: pack.id, title: pack.name, ids: practiceIds(pack.id), results: [], done: false };
     }
-    const last = store.get('endless:last', []);
-    const fresh = PROMPTS.map((p) => p.id).filter((id) => !last.includes(id));
-    const ids = shuffle(fresh.length >= ROUNDS ? fresh : PROMPTS.map((p) => p.id)).slice(0, ROUNDS);
-    store.set('endless:last', ids);
-    return { mode: 'endless', title: 'Endlos-Tauchgang', ids, results: [], done: false };
+    return { mode: 'endless', title: 'Endlos-Tauchgang', ids: practiceIds(), results: [], done: false };
   }
+
+  /* Question rotation ------------------------------------------------------ */
+
+  // Every prompt remembers when it was last on screen (daily dives included), and practice
+  // dives draw the least recently played ones: nothing repeats until everything else had a turn.
+  let seen = store.get('seen', {});
+  let seenTick = Math.max(0, ...Object.values(seen));
+
+  function markSeen(id) {
+    seen[id] = ++seenTick;
+    store.set('seen', seen);
+  }
+
+  function practicePool(packId) {
+    return PROMPTS.filter((p) => !packId || p.pack === packId).map((p) => p.id);
+  }
+
+  function practiceIds(packId) {
+    // Shuffle first so prompts never seen (or seen equally long ago) come in random order;
+    // the sort is stable, so that randomness survives.
+    return shuffle(practicePool(packId))
+      .sort((a, b) => (seen[a] || 0) - (seen[b] || 0))
+      .slice(0, ROUNDS);
+  }
+
+  const unseenCount = (packId) => practicePool(packId).filter((id) => !seen[id]).length;
 
   const gameDepth = (g) => totalPoints(g.results) * M_PER_POINT;
 
@@ -585,13 +606,14 @@
     }
 
     const packs = PACKS.map((p) => {
-      const count = PROMPTS.filter((q) => q.pack === p.id).length;
+      const count = practicePool(p.id).length;
+      const fresh = unseenCount(p.id);
       return `
       <button class="pack${p.soon ? ' soon' : ''}" ${p.soon ? 'disabled aria-disabled="true"' : `data-act="pack" data-pack="${p.id}"`}>
         <span class="pack-icon" aria-hidden="true">${p.icon}</span>
         <span class="pack-name">${esc(p.name)}</span>
         <span class="pack-blurb">${esc(p.blurb)}</span>
-        <span class="pack-meta">${p.soon ? 'Bald verfügbar' : `${count} Fragen · Training`}</span>
+        <span class="pack-meta">${p.soon ? 'Bald verfügbar' : fresh ? `${count} Fragen · ${fresh} neu` : `${count} Fragen · alle gespielt`}</span>
       </button>`;
     }).join('');
 
@@ -614,7 +636,10 @@
         <article class="card endless">
           <div>
             <h2>Endlos-Tauchgang</h2>
-            <p>Sieben zufällige Fragen aus allen Paketen. Spiel so oft du willst — dein Tagesergebnis bleibt davon unberührt.</p>
+            <p>Sieben Fragen aus allen Paketen, ohne Wiederholung: Erst wenn du alle gesehen hast, kommen die am längsten zurückliegenden wieder. Dein Tagesergebnis bleibt davon unberührt.</p>
+            <p class="endless-count">${unseenCount()
+              ? `Noch <strong>${unseenCount()}</strong> von ${PROMPTS.length} Fragen hast du noch nie gesehen.`
+              : `Du hast alle ${PROMPTS.length} Fragen gesehen — ab jetzt kommen die am längsten zurückliegenden wieder.`}</p>
           </div>
           <button class="btn ghost" data-act="endless">Abtauchen</button>
         </article>
@@ -686,6 +711,7 @@
       return nextRound();
     }
     game.round = { prompt, tries: [], phase: 'preview' };
+    markSeen(prompt.id);
     updatePips();
     const packName = prompt.pack !== 'mixed' && PACK_BY_ID.get(prompt.pack) ? PACK_BY_ID.get(prompt.pack).name : 'Gemischt';
     $('#promptCard').innerHTML = `
@@ -1204,7 +1230,7 @@
   });
 
   // Small hook for tests and the curious.
-  window.KrillionEngine = { matchAnswer, suggestAnswers, sheetFor, keyOf, dailyPromptIds, diveNumber, TIERS };
+  window.KrillionEngine = { matchAnswer, suggestAnswers, sheetFor, keyOf, dailyPromptIds, diveNumber, practiceIds, markSeen, TIERS };
 
   startMarineSnow();
   ocean.set(0);
