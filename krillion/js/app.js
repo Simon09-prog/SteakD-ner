@@ -10,7 +10,8 @@
   const PACK_BY_ID = new Map(PACKS.map((p) => [p.id, p]));
 
   const ROUNDS = 7;
-  const ANSWER_MS = 25000;
+  const ANSWER_MS = 40000;
+  const ANSWER_SECS = ANSWER_MS / 1000;
   const PREVIEW_MS = 3000;
   const M_PER_POINT = 10;
   const MAX_DEPTH = ROUNDS * 100 * M_PER_POINT; // 7,000 m — the trench floor
@@ -100,6 +101,8 @@
       .replace(/['’‘`´ʻ]/g, '')
       .replace(/[^a-z0-9]+/g, ' ')
       .trim();
+    // "Aegypten" and "Ägypten" are the same country; spelling games keep their exact letters.
+    if (!prompt.strict) t = t.replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
     // "&", "and" and "und" all read the same, so "Romeo & Julia" meets "Romeo und Julia".
     let words = t ? t.split(' ').map((w) => (w === 'and' ? 'und' : w)) : [];
     if (words.length > 1 && ARTICLES.has(words[0])) words.shift();
@@ -183,33 +186,50 @@
 
   const digitsOf = (s) => s.replace(/\D/g, '');
 
+  // German plurals differ from the singular only at the end ("Kartoffeln", "Bohne"/"Bohnen"),
+  // so those endings count as the same answer straight away.
+  const PLURAL_ENDINGS = ['en', 'n', 'e', 's', 'er'];
+
+  function keyVariants(key, prompt) {
+    if (prompt.strict || key.length < 4) return [key];
+    const out = [key, ...PLURAL_ENDINGS.map((s) => key + s)];
+    for (const s of PLURAL_ENDINGS) if (key.endsWith(s) && key.length - s.length >= 3) out.push(key.slice(0, -s.length));
+    return out;
+  }
+
   function matchAnswer(input, prompt) {
     const sheet = sheetFor(prompt);
-    const { key, tail } = keyOf(input, prompt);
+    const { key } = keyOf(input, prompt);
     if (!key) return null;
-    const exact = sheet.index.get(key);
-    if (exact) return { entry: exact.entry, fuzzy: false };
-    if (prompt.strict || key.length < 5) return null;
-
-    const max = key.length >= 9 ? 2 : 1;
-    let best = null;
-    let bestD = Infinity;
-    let tie = false;
-    for (const [k, { entry, tail: candTail }] of sheet.index) {
-      if (Math.abs(k.length - key.length) > max) continue;
-      if (digitsOf(k) !== digitsOf(key)) continue; // "Toy Story 6" must not become "Toy Story 5"
-      if ((ROMANISH.test(tail) || ROMANISH.test(candTail)) && tail !== candTail) continue; // nor "Richard I" → "Richard II"
-      const d = editDistance(key, k, max);
-      if (d > max) continue;
-      if (d < bestD) {
-        best = entry;
-        bestD = d;
-        tie = false;
-      } else if (d === bestD && entry !== best) {
-        tie = true;
-      }
+    for (const k of keyVariants(key, prompt)) {
+      const hit = sheet.index.get(k);
+      if (hit) return { entry: hit.entry, fuzzy: k !== key };
     }
-    return best && !tie ? { entry: best, fuzzy: true } : null;
+    return null;
+  }
+
+  // Near misses are never scored silently: they come back as "Meintest du …?" choices.
+  function suggestAnswers(input, prompt, limit = 3) {
+    const sheet = sheetFor(prompt);
+    const { key, tail } = keyOf(input, prompt);
+    if (key.length < 3) return [];
+    const maxD = prompt.strict ? (key.length >= 5 ? 1 : 0) : key.length <= 4 ? 1 : key.length <= 8 ? 2 : 3;
+    const scores = new Map();
+    for (const [k, { entry, tail: candTail }] of sheet.index) {
+      let score = null;
+      const sameNumbers = digitsOf(k) === digitsOf(key) // "Toy Story 6" never hints at "Toy Story 5"
+        && !((ROMANISH.test(tail) || ROMANISH.test(candTail)) && tail !== candTail); // nor "Richard I" at "Richard II"
+      if (maxD > 0 && sameNumbers && Math.abs(k.length - key.length) <= maxD) {
+        const d = editDistance(key, k, maxD);
+        if (d <= maxD) score = d;
+      }
+      // A recognisable start of a longer answer: "Monster" → "Die Monster AG", "Bernhard" → "Bernhardiner".
+      if (score === null && !prompt.strict && key.length >= 4 && (k.startsWith(key) || (key.length >= 5 && k.includes(key)))) {
+        score = maxD + 1 + (k.length - key.length) / 100;
+      }
+      if (score !== null && !(scores.get(entry) <= score)) scores.set(entry, score);
+    }
+    return [...scores].sort((a, b) => a[1] - b[1]).slice(0, limit).map(([entry]) => entry);
   }
 
   /* ───────────────────────────── Daily dive ───────────────────────────── */
@@ -559,7 +579,7 @@
     } else {
       dailyBody = `
         <ul class="daily-facts">
-          <li><strong>7</strong> Fragen</li><li><strong>25</strong> Sekunden pro Frage</li><li>Seltenere Antworten tauchen <strong>tiefer</strong></li>
+          <li><strong>7</strong> Fragen</li><li><strong>${ANSWER_SECS}</strong> Sekunden pro Frage</li><li>Seltenere Antworten tauchen <strong>tiefer</strong></li>
         </ul>
         <div class="card-actions"><button class="btn primary big" data-act="start-daily">Tauchgang starten ${ICONS.down}</button></div>`;
     }
@@ -719,6 +739,7 @@
         <button class="btn primary" type="submit">Tauchen ${ICONS.down}</button>
       </form>
       <p class="feedback" id="feedback" aria-live="polite"></p>
+      <div class="suggest" id="suggest" hidden></div>
       <ul class="tries" id="tries" aria-label="Antworten, die nicht auf dem Bogen stehen"></ul>
       <button class="link-btn" data-act="skip">Frage überspringen</button>`;
     const input = $('#answer');
@@ -741,7 +762,19 @@
     const fb = $('#feedback');
     const already = round.tries.some((t) => t.toLowerCase() === text.toLowerCase());
     if (!already) round.tries.push(text);
-    fb.textContent = already ? `„${text}" hast du schon probiert.` : `„${text}" steht nicht auf dem Antwortbogen. Versuch es nochmal!`;
+    round.suggestions = suggestAnswers(text, round.prompt);
+    const box = $('#suggest');
+    fb.classList.toggle('soft', round.suggestions.length > 0);
+    if (round.suggestions.length) {
+      fb.textContent = `„${text}" steht so nicht auf dem Bogen.`;
+      box.innerHTML = `<span class="suggest-label">Meintest du:</span>${round.suggestions
+        .map((e, i) => `<button type="button" class="suggest-btn" data-act="pick" data-idx="${i}">${esc(e.label)}</button>`).join('')}`;
+      box.hidden = false;
+    } else {
+      fb.textContent = already ? `„${text}" hast du schon probiert.` : `„${text}" steht nicht auf dem Antwortbogen. Versuch es nochmal!`;
+      box.hidden = true;
+      box.innerHTML = '';
+    }
     $('#tries').innerHTML = round.tries.map((t) => `<li>${esc(t)}</li>`).join('');
     const input = $('#answer');
     input.value = '';
@@ -780,7 +813,9 @@
       <div class="reveal tier-${tier}">
         ${tierBadge(tier)}
         ${hit
-          ? `<p class="reveal-answer">„${esc(hit.text)}"${hit.fuzzy || keyDiffers(hit.text, hit.entry.label, round.prompt) ? `<span class="matched">gewertet als ${esc(hit.entry.label)}</span>` : ''}</p>`
+          ? `<p class="reveal-answer">„${esc(hit.text)}"${hit.picked
+            ? '<span class="matched">Vorschlag übernommen</span>'
+            : hit.fuzzy || keyDiffers(hit.text, hit.entry.label, round.prompt) ? `<span class="matched">gewertet als ${esc(hit.entry.label)}</span>` : ''}</p>`
           : `<p class="reveal-answer muted">${missText}</p>`}
         <p class="reveal-points">${pts ? `+${pts} Punkte <span class="sep">·</span> <span class="descent">${ICONS.down} ${fmt(pts * M_PER_POINT)} m</span>` : 'Du hältst deine Tiefe.'}</p>
         <p class="reveal-note">${esc(note)}</p>
@@ -1102,7 +1137,8 @@
       <h2>So wird gespielt</h2>
       <ol class="rules">
         <li>Jeden Tag gibt es einen neuen Tauchgang mit <strong>7 Fragen</strong> — für alle dieselben.</li>
-        <li>Du hast <strong>25 Sekunden</strong> pro Frage. Falsche Versuche kosten nur Zeit, also tipp einfach weiter.</li>
+        <li>Du hast <strong>${ANSWER_SECS} Sekunden</strong> pro Frage. Falsche Versuche kosten nur Zeit, also tipp einfach weiter.</li>
+        <li>Liegst du knapp daneben, schlagen wir passende Antworten vor — tippe auf einen Vorschlag, um ihn abzugeben.</li>
         <li>Jede Antwort auf dem Bogen zählt — aber je <strong>seltener</strong> sie ist, desto mehr Punkte gibt es.</li>
         <li>Jeder Punkt bringt dich <strong>10 m tiefer</strong>. Ein perfekter Tauchgang (700 Punkte) erreicht den Grabenboden in ${fmt(MAX_DEPTH)} m Tiefe.</li>
       </ol>
@@ -1139,6 +1175,10 @@
       case 'again': return game && game.mode === 'pack' ? startGame('pack', { packId: game.packId }) : startGame('endless');
       case 'next': return nextRound();
       case 'skip': return resolveRound(null, 'skip');
+      case 'pick': {
+        const entry = game && game.round && game.round.suggestions && game.round.suggestions[Number(el.dataset.idx)];
+        return entry ? resolveRound({ text: entry.label, entry, fuzzy: true, picked: true }) : undefined;
+      }
       case 'quit': return quitGame();
       case 'share': return share();
       case 'help': return helpModal();
@@ -1164,7 +1204,7 @@
   });
 
   // Small hook for tests and the curious.
-  window.KrillionEngine = { matchAnswer, sheetFor, keyOf, dailyPromptIds, diveNumber, TIERS };
+  window.KrillionEngine = { matchAnswer, suggestAnswers, sheetFor, keyOf, dailyPromptIds, diveNumber, TIERS };
 
   startMarineSnow();
   ocean.set(0);

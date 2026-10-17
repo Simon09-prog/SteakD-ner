@@ -474,6 +474,22 @@ body[data-screen='is-home'] .brand { visibility: hidden; }
 }
 
 .feedback { min-height: 1.5em; margin: 12px 0 6px; color: var(--danger); font-size: 0.95rem; }
+.feedback.soft { color: var(--ink-soft); }
+.suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; animation: rise 0.25s ease-out both; }
+.suggest-label { font-size: 0.9rem; color: var(--ink-soft); }
+.suggest-btn {
+  min-height: 40px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--glow);
+  background: rgba(103, 240, 230, 0.12);
+  color: var(--ink);
+  font: 600 1rem var(--display);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.suggest-btn:hover { background: rgba(103, 240, 230, 0.24); }
+.suggest-btn:active { transform: scale(0.97); }
 .tries { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0 0 10px; }
 .tries li { padding: 3px 10px; border-radius: 999px; background: rgba(255, 107, 129, 0.12); color: rgba(255, 190, 200, 0.85); font-size: 0.85rem; text-decoration: line-through; text-decoration-color: rgba(255, 107, 129, 0.7); }
 

@@ -1,6 +1,6 @@
 # Krillion (Nachbau)
 
-Ein inoffizieller Nachbau des täglichen Trivia-Spiels [krillion.io](https://krillion.io): Jeden Tag 7 Fragen, 25 Sekunden pro Frage. Jede richtige Antwort zählt, aber je **seltener** sie ist, desto mehr Punkte gibt es. Jeder Punkt bringt dich 10 m tiefer, ein perfekter Tauchgang (700 Punkte) erreicht den Grabenboden in 7.000 m Tiefe.
+Ein inoffizieller Nachbau des täglichen Trivia-Spiels [krillion.io](https://krillion.io): Jeden Tag 7 Fragen, 40 Sekunden pro Frage. Jede richtige Antwort zählt, aber je **seltener** sie ist, desto mehr Punkte gibt es. Jeder Punkt bringt dich 10 m tiefer, ein perfekter Tauchgang (700 Punkte) erreicht den Grabenboden in 7.000 m Tiefe.
 
 Das Spiel ist komplett auf Deutsch, inklusive aller Fragen und Antwortbögen. Fragen, die nur im Englischen funktionieren (Reime, Palindrome usw.), wurden durch deutsche Varianten ersetzt.
 
@@ -19,7 +19,8 @@ npx serve krillion
 - **Endlos-Tauchgang** und **Themenpakete** (Wörter & Sprache, Kino & Film, Sport, Geografie; Musik folgt): unbegrenztes Üben, ohne Einfluss auf das Tagesergebnis.
 - **Ergebnis-Screen** mit Tauchprofil, Emoji-Zeile zum Teilen und dem vollständigen Antwortbogen jeder Frage.
 - **Tauchlogbuch** mit Statistiken und Streaks (im `localStorage` des Browsers).
-- Die Antwortprüfung ignoriert Groß-/Kleinschreibung, Umlaute/Akzente, Artikel (der/die/das, the …) und Satzzeichen, versteht zusammengesetzte Wörter wie „Namibwüste" oder „Erzgebirge" und toleriert kleine Tippfehler. Ausnahme: Fragen, bei denen es auf die exakte Schreibweise ankommt (z. B. Palindrome).
+- Die Antwortprüfung ignoriert Groß-/Kleinschreibung, Umlaute/Akzente, Artikel (der/die/das, the …) und Satzzeichen, versteht zusammengesetzte Wörter wie „Namibwüste" oder „Erzgebirge" erkennt „ae/oe/ue" statt Umlaut sowie deutsche Pluralformen. Ausnahme: Fragen, bei denen es auf die exakte Schreibweise ankommt (z. B. Palindrome).
+- **Vorschläge**: Liegt eine Antwort knapp daneben (Tippfehler oder Anfang einer längeren Antwort), erscheint „Meintest du …?" mit bis zu drei Vorschlägen, die man per Tippen abgeben kann.
 
 ## Fragen hinzufügen
 
