@@ -17,7 +17,7 @@ window.KRILLION_PACKS = [
   { id: 'movies', name: 'Kino & Film', icon: '🎬', blurb: 'Regisseure, Filmreihen, Figuren und Oscar-Nächte.' },
   { id: 'sports', name: 'Sport', icon: '🏟️', blurb: 'Teams, Champions und alles mit Anzeigetafel.' },
   { id: 'geo', name: 'Geografie', icon: '🗺️', blurb: 'Länder, Hauptstädte, Flüsse, Wüsten und Gebirge.' },
-  { id: 'music', name: 'Musik', icon: '🎵', blurb: 'Bands, Alben und One-Hit-Wonder.', soon: true },
+  { id: 'music', name: 'Musik', icon: '🎵', blurb: 'Bands, Hits, Komponisten und Musicals.' },
 ];
 
 window.KRILLION_PROMPTS = [

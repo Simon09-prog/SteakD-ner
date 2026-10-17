@@ -92,7 +92,7 @@
   const ROMANISH = /^(?:\d+|i{1,3}|iv|vi{0,3}|ix|x)$/;
   const ARTICLES = new Set(['the', 'a', 'an', 'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen']);
 
-  function tokens(text, prompt) {
+  function tokens(text, prompt, foldAdjectives = false) {
     let t = String(text)
       .normalize('NFD').replace(/[̀-ͯ]/g, '')
       .toLowerCase()
@@ -116,6 +116,12 @@
       const suffix = last >= 0 && prompt.strip.find((s) => words[last].endsWith(s) && words[last].length >= s.length + 3);
       if (suffix) words[last] = words[last].slice(0, -suffix.length);
     }
+    // German adjectives bend with their article: "Schwarzes Meer" and "das Schwarze Meer" fold
+    // to one form. Only words before the noun are touched, and only as a second matching pass,
+    // so spellings like "Genfer See" / "Genfersee" still meet on the first one.
+    if (foldAdjectives) {
+      words = words.map((w, i) => (i < words.length - 1 && w.length > 4 && /(?:er|es|en|em)$/.test(w) ? w.slice(0, -1) : w));
+    }
     return words;
   }
 
@@ -128,8 +134,8 @@
     return w;
   }
 
-  function keyOf(text, prompt) {
-    const words = tokens(text, prompt);
+  function keyOf(text, prompt, foldAdjectives = false) {
+    const words = tokens(text, prompt, foldAdjectives);
     if (!words.length) return { key: '', tail: '' };
     if (!prompt.strict) words[words.length - 1] = singular(words[words.length - 1]);
     return { key: words.join(''), tail: words[words.length - 1] };
@@ -151,13 +157,18 @@
       }
     }
     const index = new Map();
+    const adjIndex = new Map();
     for (const entry of entries) {
       for (const alias of entry.aliases) {
         const { key, tail } = keyOf(alias, prompt);
         if (key && !index.has(key)) index.set(key, { entry, tail });
+        if (!prompt.strict) {
+          const folded = keyOf(alias, prompt, true).key;
+          if (folded && !adjIndex.has(folded)) adjIndex.set(folded, entry);
+        }
       }
     }
-    const sheet = { entries, index };
+    const sheet = { entries, index, adjIndex };
     sheetCache.set(prompt.id, sheet);
     return sheet;
   }
@@ -204,6 +215,13 @@
     for (const k of keyVariants(key, prompt)) {
       const hit = sheet.index.get(k);
       if (hit) return { entry: hit.entry, fuzzy: k !== key };
+    }
+    if (!prompt.strict) {
+      const folded = keyOf(input, prompt, true).key;
+      for (const k of keyVariants(folded, prompt)) {
+        const entry = sheet.adjIndex.get(k);
+        if (entry) return { entry, fuzzy: true };
+      }
     }
     return null;
   }
