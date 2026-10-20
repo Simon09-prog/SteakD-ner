@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speisekarte | Zum Drehspieß Osnabrück</title>
+    <meta name="description" content="Speisekarte von Zum Drehspieß in Osnabrück: Kebap Sandwich, Dürüm, Lahmacun, Tellergerichte, Pide, Pizza, Salate – und viele vegane Gerichte mit Seitan-Döner.">
+    <meta name="theme-color" content="#14100e">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="assets/fonts/bebas-neue-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/style.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <!-- Icon-Sammlung -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="i-spit" viewBox="0 0 32 32">
+            <path d="M16 2v28" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M9 7h14l-2.5 17.5h-9z" fill="currentColor"/>
+            <path d="M10 12h12M10.8 16.5h10.4M11.5 21h9" stroke="#ffa62b" stroke-width="1.3" opacity=".65" fill="none"/>
+        </symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+        <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/></symbol>
+        <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+        <symbol id="i-insta" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></symbol>
+        <symbol id="i-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    </svg>
+
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+
+    <!-- Navigation -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo" aria-label="Zum Drehspieß – Startseite">
+                <span class="logo-mark"><svg><use href="#i-spit"/></svg></span>
+                <span class="logo-text">Zum Drehspieß<small>Osnabrück · seit 2015</small></span>
+            </a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnavigation" aria-label="Menü öffnen">
+                <svg class="ic ic-menu"><use href="#i-menu"/></svg>
+                <svg class="ic ic-close"><use href="#i-close"/></svg>
+            </button>
+            <nav class="nav" id="hauptnavigation" aria-label="Hauptnavigation">
+                <a href="index.html#about">Über uns</a>
+                <a href="speisekarte.html" aria-current="page">Speisekarte</a>
+                <a href="index.html#vegan">Vegan</a>
+                <a href="index.html#news">News</a>
+                <a href="index.html#kontakt">Kontakt</a>
+                <a class="btn btn-primary btn-sm" href="https://www.zum-drehspiess.de/" target="_blank" rel="noopener">
+                    <svg class="ic"><use href="#i-bag"/></svg> Online bestellen
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="inhalt">
+
+        <section class="page-hero">
+            <div class="container">
+                <p class="eyebrow">Frisch vom Spieß · Große Hamkenstraße 21</p>
+                <h1>Speisekarte</h1>
+                <p>Döner, Dürüm, Lahmacun, Pide und Pizza – und fast alles gibt’s auch vegan mit unserem Seitan-Döner.</p>
+                <a href="https://www.zum-drehspiess.de/" class="btn btn-primary" target="_blank" rel="noopener"><svg class="ic"><use href="#i-bag"/></svg> Jetzt online bestellen</a>
+            </div>
+        </section>
+
+        <!-- Kategorien & Filter -->
+        <div class="menu-toolbar">
+            <div class="container">
+                <nav class="cat-nav" aria-label="Kategorien">
+                    <a href="#sandwiches">Sandwiches</a>
+                    <a href="#duerum">Dürüm</a>
+                    <a href="#lahmacun">Lahmacun</a>
+                    <a href="#teller">Teller</a>
+                    <a href="#pide">Pide</a>
+                    <a href="#pizza">Pizza</a>
+                    <a href="#salate">Salate</a>
+                    <a href="#specials">Specials</a>
+                </nav>
+                <div class="filters" role="group" aria-label="Filter">
+                    <button class="chip" type="button" data-filter="alle" aria-pressed="true">Alle</button>
+                    <button class="chip" type="button" data-filter="veggie" aria-pressed="false">Vegetarisch</button>
+                    <button class="chip" type="button" data-filter="vegan" aria-pressed="false"><svg class="ic"><use href="#i-leaf"/></svg> Vegan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <!-- Sandwiches -->
+            <section class="menu-cat" id="sandwiches">
+                <div class="menu-cat-head">
+                    <h2>Sandwiches</h2>
+                    <p>Im frisch gebackenen Fladenbrot</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Kebap Sandwich</h3><span class="dots"></span><span class="price">7,70 €</span></div>
+                        <p>Der Klassiker: Fleisch frisch vom Spieß mit Salat und Soße nach Wahl.</p>
+                        <div class="badges"><span class="badge badge-star">Klassiker</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Mini Kebap Sandwich</h3><span class="dots"></span><span class="price">7,00 €</span></div>
+                        <p>Für den kleinen Hunger zwischendurch.</p>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Veggie-Döner Sandwich</h3><span class="dots"></span><span class="price">8,70 €</span></div>
+                        <p>Veganer Döner aus Seitan vom eigenen Spieß.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Veggie-Döner Sandwich mit frittiertem Gemüse</h3><span class="dots"></span><span class="price">9,70 €</span></div>
+                        <p>Seitan-Döner, dazu knusprig frittiertes Gemüse.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Dürüm -->
+            <section class="menu-cat" id="duerum">
+                <div class="menu-cat-head">
+                    <h2>Dürüm</h2>
+                    <p>Im dünnen Yufka-Fladen gerollt</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Dürüm Kebap</h3><span class="dots"></span><span class="price">9,50 €</span></div>
+                        <p>Fleisch vom Spieß mit Salat und Soße, fest eingerollt.</p>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Dürüm Weichkäse</h3><span class="dots"></span><span class="price">8,70 €</span></div>
+                        <p>Mit Weichkäse aus Kuhmilch, Salat und Soße.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Dürüm Veggie-Döner</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Mit veganem Seitan-Döner vom eigenen Spieß.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Dürüm Falafel</h3><span class="dots"></span><span class="price">9,50 €</span></div>
+                        <p>Knusprige Falafel mit frischem Salat.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Dürüm Vegan</h3><span class="dots"></span><span class="price">7,70 €</span></div>
+                        <p>Rein pflanzlich gefüllt.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Lahmacun -->
+            <section class="menu-cat" id="lahmacun">
+                <div class="menu-cat-head">
+                    <h2>Lahmacun</h2>
+                    <p>Dünn, knusprig und mit Salat gerollt</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Lahmacun</h3><span class="dots"></span><span class="price">7,70 €</span></div>
+                        <p>Türkische Pizza mit würzigem Hackfleisch-Belag.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Lahmacun mit Kebap</h3><span class="dots"></span><span class="price">9,50 €</span></div>
+                        <p>Lahmacun, extra gefüllt mit Fleisch vom Spieß.</p>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Vegacun</h3><span class="dots"></span><span class="price">8,50 €</span></div>
+                        <p>Unser veganes Lahmacun – mit Seitan-Belag statt Hackfleisch.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Vegacun mit Veggie-Döner</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Vegacun, extra gefüllt mit Seitan-Döner.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Tellergerichte -->
+            <section class="menu-cat" id="teller">
+                <div class="menu-cat-head">
+                    <h2>Tellergerichte</h2>
+                    <p>Für den großen Hunger</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Döner Teller</h3><span class="dots"></span><span class="price">11,00 €</span></div>
+                        <p>Fleisch vom Spieß mit Salat und Soße.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Kebap Teller mit Beilage</h3><span class="dots"></span><span class="price">12,50 €</span></div>
+                        <p>Mit einer Beilage nach Wahl.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Kebap Teller mit frittiertem Gemüse</h3><span class="dots"></span><span class="price">13,50 €</span></div>
+                        <p>Mit frittiertem Gemüse und einer Beilage nach Wahl.</p>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Veggie-Döner Teller</h3><span class="dots"></span><span class="price">12,50 €</span></div>
+                        <p>Seitan-Döner vom eigenen Spieß als Teller.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Pide -->
+            <section class="menu-cat" id="pide">
+                <div class="menu-cat-head">
+                    <h2>Pide</h2>
+                    <p>Türkisches Schiffchen aus dem Ofen</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pide Käse</h3><span class="dots"></span><span class="price">9,50 €</span></div>
+                        <p>Mit geschmolzenem Käse.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pide Hackfleisch &amp; Käse</h3><span class="dots"></span><span class="price">10,00 €</span></div>
+                        <p>Würziges Hackfleisch und Käse.</p>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pide Spinat &amp; Weichkäse</h3><span class="dots"></span><span class="price">10,00 €</span></div>
+                        <p>Mit Spinat und Weichkäse.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pide Kebap &amp; Käse</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Fleisch vom Spieß und Käse.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pide Kebap &amp; Käse scharf</h3><span class="dots"></span><span class="price">11,00 €</span></div>
+                        <p>Die scharfe Variante.</p>
+                        <div class="badges"><span class="badge badge-hot">Scharf</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Pizza -->
+            <section class="menu-cat" id="pizza">
+                <div class="menu-cat-head">
+                    <h2>Pizza</h2>
+                    <p>Frisch aus dem Ofen</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pizza Drehspieß</h3><span class="dots"></span><span class="price">12,00 €</span></div>
+                        <p>Kebap, Pommes, Tomaten, Zwiebeln und Sauce Hollandaise.</p>
+                        <div class="badges"><span class="badge badge-star">Hausspezialität</span></div>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pizza Margherita</h3><span class="dots"></span><span class="price">9,00 €</span></div>
+                        <p>Tomatensoße und Käse.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pizza Funghi</h3><span class="dots"></span><span class="price">10,00 €</span></div>
+                        <p>Mit Champignons.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pizza Broccoli</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Mit Brokkoli.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pizza Salami</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Mit Salami.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pizza Kebap</h3><span class="dots"></span><span class="price">10,50 €</span></div>
+                        <p>Mit Fleisch vom Spieß.</p>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Pizza Spinat</h3><span class="dots"></span><span class="price">11,50 €</span></div>
+                        <p>Mit Spinat.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Pizza Curry Sucuk</h3><span class="dots"></span><span class="price">11,50 €</span></div>
+                        <p>Mit Sucuk und Curry.</p>
+                    </article>
+                    <article class="dish" data-diet="veggie">
+                        <div class="dish-head"><h3>Veggie-Pizza</h3><span class="dots"></span><span class="price">13,00 €</span></div>
+                        <p>Frisches Gemüse, Brokkoli, Seitan-Döner und Jalapeños.</p>
+                        <div class="badges"><span class="badge badge-veggie">Vegetarisch</span><span class="badge badge-hot">Mit Jalapeños</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Salate & Beilagen -->
+            <section class="menu-cat" id="salate">
+                <div class="menu-cat-head">
+                    <h2>Salate &amp; Beilagen</h2>
+                    <p>Frisch und knackig</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Gemischter Salat</h3><span class="dots"></span><span class="price">7,00 €</span></div>
+                        <p>Bunter Salat der Saison.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Thunfisch Salat</h3><span class="dots"></span><span class="price">8,50 €</span></div>
+                        <p>Eisbergsalat, Krautsalat, Tomaten, Gurken, Zwiebeln, Mais und Thunfisch.</p>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Hummus</h3><span class="dots"></span><span class="price">4,00 €</span></div>
+                        <p>Cremiges Kichererbsenpüree.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Specials -->
+            <section class="menu-cat" id="specials">
+                <div class="menu-cat-head">
+                    <h2>Neu &amp; Specials</h2>
+                    <p>Frag im Laden nach dem aktuellen Preis</p>
+                </div>
+                <div class="dishes">
+                    <article class="dish">
+                        <div class="dish-head"><h3>Döner im Broich-Brot</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Knusprig außen, saftig innen – diese Kombo kannte hier noch keiner.</p>
+                        <div class="badges"><span class="badge badge-new">Neu</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Burger</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Döner können wir – jetzt zeigen wir, was wir noch können.</p>
+                        <div class="badges"><span class="badge badge-new">Neu</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Iskender Kebap</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Zartes Dönerfleisch mit Tomatensoße.</p>
+                        <div class="badges"><span class="badge badge-star">TikTok-Liebling</span></div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Sucuk-Döner</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Mit würziger Sucuk – in Osnabrück zuerst bei uns.</p>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-head"><h3>Hähnchen-Döner</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Mit Hähnchenfleisch vom Spieß.</p>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Vegane Currywurst mit Pommes</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Der Imbiss-Klassiker, komplett pflanzlich.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                    <article class="dish" data-diet="vegan">
+                        <div class="dish-head"><h3>Vegane Pizza &amp; vegane Döner-Pizza</h3><span class="dots"></span><span class="price ask">im Laden</span></div>
+                        <p>Margherita oder mit Seitan-Döner – mit veganem Käse.</p>
+                        <div class="badges"><span class="badge badge-vegan">Vegan</span></div>
+                    </article>
+                </div>
+            </section>
+
+            <p class="menu-empty" hidden>Für diesen Filter gibt es gerade keine Gerichte.</p>
+
+            <div class="menu-note">
+                <svg class="ic"><use href="#i-info"/></svg>
+                <p>Preise laut Online-Speisekarte (Stand 2025), Änderungen vorbehalten. Tagesaktuelle Preise findest du im Laden oder beim <a href="https://www.zum-drehspiess.de/" target="_blank" rel="noopener">Online-Bestellen</a>. Infos zu Allergenen und Zusatzstoffen bekommst du an der Theke.</p>
+            </div>
+
+            <div class="section-cta" style="margin-bottom: 80px;">
+                <a href="index.html" class="btn btn-dark">&larr; Zurück zur Startseite</a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <span class="logo-mark"><svg><use href="#i-spit"/></svg></span>
+                        <span class="logo-text">Zum Drehspieß<small>Osnabrück · seit 2015</small></span>
+                    </a>
+                    <p>Türkische Spezialitäten &amp; vegane Highlights – frisch vom Spieß in der Osnabrücker Innenstadt.</p>
+                    <div class="social">
+                        <a href="https://www.instagram.com/zumdrehspiess/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-insta"/></svg></a>
+                        <a href="https://www.facebook.com/zumdrehspiess/" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h4>Besuch uns</h4>
+                    <p>Große Hamkenstraße 21<br>49074 Osnabrück</p>
+                    <p><a href="tel:+4954126696">0541 26696</a></p>
+                </div>
+                <div>
+                    <h4>Entdecken</h4>
+                    <ul>
+                        <li><a href="index.html#about">Über uns</a></li>
+                        <li><a href="index.html#vegan">Vegan</a></li>
+                        <li><a href="index.html#kontakt">Öffnungszeiten</a></li>
+                        <li><a href="https://www.zum-drehspiess.de/" target="_blank" rel="noopener">Online bestellen</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span data-year>2026</span> Zum Drehspieß Osnabrück</p>
+                <p>Mo–Do 10–23 · Fr–Sa 10–24 · So 12–22 Uhr</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/main.js"></script>
+</body>
+</html>
